@@ -224,6 +224,8 @@ GEM
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.37.0)
       parser (>= 3.3.1.0)
+    rubocop-factory_bot (2.26.1)
+      rubocop (~> 1.61)
     rubocop-rails (2.28.0)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
@@ -231,9 +233,6 @@ GEM
       rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rspec (3.3.0)
       rubocop (~> 1.61)
-    rubocop-rspec_rails (2.30.0)
-      rubocop (~> 1.61)
-      rubocop-rspec (~> 3, >= 3.0.1)
     ruby-progressbar (1.13.0)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -306,9 +305,9 @@ DEPENDENCIES
   rails (~> 7.0.8, >= 7.0.8.7)
   rspec-rails (~> 5.0)
   rubocop
+  rubocop-factory_bot
   rubocop-rails
   rubocop-rspec
-  rubocop-rspec_rails
   shoulda-matchers (~> 5.0)
   simplecov
   sprockets-rails

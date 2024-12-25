@@ -51,6 +51,7 @@ gem 'stringio', '3.1.1' # Required by other libraries
 
 # RuboCop Gems for Linting
 gem 'rubocop', require: false
+gem 'rubocop-factory_bot', require: false
 gem 'rubocop-rails', require: false
 gem 'rubocop-rspec', require: false
 
