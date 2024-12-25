@@ -1,14 +1,17 @@
 Rails.application.routes.draw do
-  resources :transactions
-  resources :invoice_items
-  resources :invoices
-  resources :reviews
-  resources :customers
-  resources :products
-  resources :artisans
-  resources :admins
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get 'sessions/new'
+  get 'sessions/create'
+  get 'sessions/destroy'
+  # Root path
+  root 'application#welcome'
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  # Admins and their related artisans
+  resources :admins, only: %i[show index create update] do
+    resources :artisans, only: %i[index new create edit update destroy]
+  end
+
+  # Authentication routes
+  get '/login', to: 'sessions#new'
+  post '/login', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy'
 end
