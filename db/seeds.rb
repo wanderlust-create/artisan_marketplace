@@ -13,7 +13,7 @@ Transaction.destroy_all
 # Create Admins
 5.times do
   Admin.create!(
-    email: Faker::Internet.email,
+    email: Faker::Internet.unique.email,
     password: 'password' # Fixed password for simplicity
   )
 end
@@ -21,8 +21,8 @@ end
 # Create Artisans linked to Admins
 10.times do
   Artisan.create!(
-    store_name: Faker::Company.name,
-    email: Faker::Internet.email,
+    store_name: Faker::Company.unique.name,
+    email: Faker::Internet.unique.email,
     password: 'password',
     admin: Admin.order('RANDOM()').first # Random admin association
   )
@@ -33,54 +33,55 @@ end
   Customer.create!(
     first_name: Faker::Name.first_name,
     last_name: Faker::Name.last_name,
-    email: Faker::Internet.email
+    email: Faker::Internet.unique.email
   )
 end
 
 # Create Products linked to Artisans
 Artisan.all.find_each do |artisan|
-  5.times do
+  rand(3..6).times do
     artisan.products.create!(
-      name: Faker::Commerce.product_name,
-      description: Faker::Lorem.sentence,
+      name: Faker::Commerce.unique.product_name,
+      description: Faker::Lorem.paragraph,
       price: Faker::Commerce.price(range: 10.0..500.0).round(2),
-      stock: Faker::Number.between(from: 1, to: 50)
+      stock: rand(5..100)
     )
   end
 end
 
 # Create Invoices linked to Customers
-10.times do
+20.times do
   Invoice.create!(
     customer: Customer.all.sample,
-    status: Invoice.statuses.keys.sample # Ensures valid enum keys for status
+    status: Invoice.statuses.keys.sample # Random status
   )
 end
 
 # Iterate through invoices and create transactions
 Invoice.all.find_each do |invoice|
-  2.times do
+  rand(1..3).times do
     InvoiceItem.create!(
       invoice: invoice,
       product: Product.all.sample,
-      quantity: Faker::Number.between(from: 1, to: 5),
+      quantity: rand(1..10),
       unit_price: Faker::Commerce.price(range: 10.0..500.0).round(2)
     )
   end
 
-  # Create a transaction for the invoice
+  # Create a single transaction for each invoice
   Transaction.create!(
     invoice: invoice,
     credit_card_number: Faker::Finance.credit_card(:visa).gsub(/[^0-9]/, ''), # Ensure only digits
-    credit_card_expiration_date: Faker::Date.forward(days: 365).strftime('%m/%y'), # Valid future expiration date
+    credit_card_expiration_date: Faker::Date.forward(days: rand(30..365)).strftime('%m/%y'), # Random future expiration date
     status: %i[successful failed].sample
   )
 end
+
 # Create Reviews linked to Products and Customers
 Product.all.find_each do |product|
-  3.times do
+  rand(1..5).times do
     product.reviews.create!(
-      rating: Faker::Number.between(from: 1, to: 5),
+      rating: rand(1..5),
       text: Faker::Lorem.paragraph,
       customer: Customer.all.sample
     )
