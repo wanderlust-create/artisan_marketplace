@@ -4,10 +4,8 @@ class Transaction < ApplicationRecord
   validates :status, presence: true
   enum status: { successful: 0, failed: 1 }
 
-  validates :credit_card_number, presence: true,
-                                 format: { with: /\A\d{13,19}\z/, message: 'must be a valid credit card number' }
-  validates :credit_card_expiration_date, presence: true,
-                                          format: { with: %r{\A(0[1-9]|1[0-2])/(\d{2}|\d{4})\z}, message: 'must be in MM/YY or MM/YYYY format' }
+  validates :credit_card_number, presence: true, format: { with: /\A\d{13,19}\z/, message: 'must be a valid credit card number' }
+  validates :credit_card_expiration_date, presence: true, format: { with: %r{\A(0[1-9]|1[0-2])/(\d{2}|\d{4})\z}, message: 'must be in MM/YY or MM/YYYY format' }
   validate :expiration_date_cannot_be_in_the_past
 
   private
