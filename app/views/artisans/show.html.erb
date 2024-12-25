@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @artisan %>
+
+<div>
+  <%= link_to "Edit this artisan", edit_artisan_path(@artisan) %> |
+  <%= link_to "Back to artisans", artisans_path %>
+
+  <%= button_to "Destroy this artisan", @artisan, method: :delete %>
+</div>
