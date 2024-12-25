@@ -1,10 +1,25 @@
-<h1>Editing artisan</h1>
+<h1>Edit Artisan Details</h1>
 
-<%= render "form", artisan: @artisan %>
+<%= form_with model: [@admin, @artisan], local: true do |form| %>
+  <div>
+    <%= form.label :store_name, "Store Name" %>
+      <%= form.text_field :store_name %>
+  </div>
+  <div>
+    <%= form.label :email, "Email" %>
+      <%= form.email_field :email %>
+  </div>
+  <div>
+    <%= form.label :password, "Password (leave blank if unchanged)" %>
+      <%= form.password_field :password, autocomplete: "new-password" %>
+  </div>
+  <div>
+    <%= form.label :password_confirmation, "Confirm Password" %>
+      <%= form.password_field :password_confirmation %>
+  </div>
+  <div>
+    <%= form.submit "Update Artisan" %>
+  </div>
+  <% end %>
 
-<br>
-
-<div>
-  <%= link_to "Show this artisan", @artisan %> |
-  <%= link_to "Back to artisans", artisans_path %>
-</div>
+    <%= link_to 'Back to Artisan List' , admin_artisans_path(@admin) %>

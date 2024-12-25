@@ -1,10 +1,35 @@
-<p style="color: green"><%= notice %></p>
+<h2>Your Artisans</h2>
+<%= link_to 'Create New Artisan' , new_admin_artisan_path(@admin), class: 'btn btn-primary' %>
 
-<%= render @admin %>
+  <% if @admin.artisans.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Store Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @admin.artisans.each do |artisan| %>
+          <tr>
+            <td>
+              <%= artisan.store_name %>
+            </td>
+            <td>
+              <%= artisan.email %>
+            </td>
+            <td>
+              <%= link_to 'Edit' , edit_admin_artisan_path(@admin, artisan), class: 'btn btn-secondary' %> |
+                <%= button_to 'Delete' , admin_artisan_path(@admin, artisan), method: :delete, data: {
+                  confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
 
-<div>
-  <%= link_to "Edit this admin", edit_admin_path(@admin) %> |
-  <%= link_to "Back to admins", admins_path %>
 
-  <%= button_to "Destroy this admin", @admin, method: :delete %>
-</div>
+            </td>
+          </tr>
+          <% end %>
+      </tbody>
+    </table>
+    <% else %>
+      <p>No artisans yet. Start by <%= link_to 'creating a new artisan' , new_admin_artisan_path(@admin) %>.</p>
+      <% end %>

@@ -1,14 +1,31 @@
-<p style="color: green"><%= notice %></p>
+<h1>Artisans for <%= @admin.email %>
+</h1>
 
-<h1>Artisans</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Store Name</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @artisans.each do |artisan| %>
+      <tr>
+        <td>
+          <%= artisan.store_name %>
+        </td>
+        <td>
+          <%= artisan.email %>
+        </td>
+        <td>
+          <%= link_to 'Edit' , edit_admin_artisan_path(@admin, artisan) %> |
+            <%= link_to 'Delete' , admin_artisan_path(@admin, artisan), method: :delete, data: {
+              confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+      <% end %>
+  </tbody>
+</table>
 
-<div id="artisans">
-  <% @artisans.each do |artisan| %>
-    <%= render artisan %>
-    <p>
-      <%= link_to "Show this artisan", artisan %>
-    </p>
-  <% end %>
-</div>
-
-<%= link_to "New artisan", new_artisan_path %>
+<%= link_to 'Create New Artisan' , new_admin_artisan_path(@admin) %>

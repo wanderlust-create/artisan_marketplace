@@ -69,6 +69,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 5.0'
 
   gem 'capybara'
+  gem 'pry'
+  gem 'pry-rails'
   gem 'selenium-webdriver' # If you need JavaScript support
 end
 
