@@ -1,15 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Artisan, type: :model do
+  # Create a valid Admin for association
+  # Create an Artisan with a valid admin_id
+  subject { build(:artisan, admin: admin) }
+
+  let(:admin) { create(:admin) }
+
   describe 'associations' do
     it { is_expected.to have_many(:products).dependent(:destroy) }
   end
-    # Create a valid Admin for association
-  let(:admin) { create(:admin) }
 
-  # Create an Artisan with a valid admin_id
-  subject { build(:artisan, admin: admin) }
-  
   describe 'validations' do
     it { is_expected.to validate_presence_of(:store_name) }
     it { is_expected.to validate_presence_of(:email) }
