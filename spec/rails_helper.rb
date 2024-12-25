@@ -1,5 +1,5 @@
-# This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'simplecov'
+require 'capybara/rspec'
 SimpleCov.start 'rails' do
   add_filter '/bin/'
   add_filter '/db/'
@@ -10,6 +10,12 @@ end
 SimpleCov.at_exit do
   SimpleCov.result.format!
   puts "Coverage is at #{SimpleCov.result.covered_percent.round(2)}%"
+end
+
+RSpec.configure do |config|
+  config.before(:each, type: :system) do
+    driven_by :rack_test # Use :selenium for JavaScript-enabled tests
+  end
 end
 
 require 'spec_helper'
