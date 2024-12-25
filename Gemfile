@@ -37,36 +37,53 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
+gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
+gem 'bcrypt', '~> 3.1.7'
 gem "bootsnap", require: false
 
-# Use Sass to process CSS
+# RuboCop Gems for Linting
+gem 'rubocop', require: false
+gem 'rubocop-rails', require: false
+gem 'rubocop-rspec', require: false
+gem 'rubocop-rspec_rails', require: false # This gem is not commonly used; ensure it's intended.
+
+# Uncomment if you need Sass for CSS processing
 # gem "sassc-rails"
 
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+# Uncomment if you need Active Storage variants for image processing
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
-  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  # Debugging tools
+  gem "debug", platforms: %i[mri mingw x64_mingw]
+
+  # RSpec for testing
+  gem 'rspec-rails', '~> 5.0' # RSpec 6.0 is available if you're using Rails 7+
 end
 
 group :development do
-  # Use console on exceptions pages [https://github.com/rails/web-console]
+  # Console on exception pages
   gem "web-console"
 
-  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # Uncomment to add speed badges during development
   # gem "rack-mini-profiler"
 
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # Uncomment for faster commands on slow machines
   # gem "spring"
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem "capybara"
-  gem "selenium-webdriver"
+  # FactoryBot for test data
+  gem 'factory_bot_rails'
 
+  # Faker for generating test data
+  gem 'faker', '~> 2.20'
+
+  # Shoulda Matchers for concise model and controller tests
+  gem 'shoulda-matchers', '~> 5.0'
+
+  # SimpleCov for test coverage reporting
+  gem 'simplecov', require: false
 end
