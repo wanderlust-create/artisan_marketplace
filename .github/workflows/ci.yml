@@ -1,0 +1,57 @@
+name: Ruby CI
+
+on:
+  push:
+    branches:
+      - '*' # Runs on all branches
+  pull_request:
+    branches:
+      - '*' # Runs on all pull requests
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14 # Use a stable Postgres version
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.6'
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Set up database
+        env:
+          RAILS_ENV: test
+        run: |
+          cp config/database.yml.ci config/database.yml || echo 'No custom database.yml.ci provided'
+          bin/rails db:create
+          bin/rails db:migrate
+
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+        run: bundle exec rspec
+
+      - name: Run RuboCop
+        run: bundle exec rubocop
