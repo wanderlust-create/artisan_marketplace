@@ -3,10 +3,10 @@ name: Ruby CI
 on:
   push:
     branches:
-      - '*' # Runs on all branches
+      - "*" # Runs on all branches
   pull_request:
     branches:
-      - '*' # Runs on all pull requests
+      - "*" # Runs on all pull requests
 
 jobs:
   test:
@@ -14,7 +14,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:14 # Use a stable Postgres version
+        image: postgres:14 # Stable version of Postgres
         ports:
           - 5432:5432
         env:
@@ -33,7 +33,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.6'
+          ruby-version: "3.3.6" # Update this to match your Ruby version
 
       - name: Install dependencies
         run: |
@@ -51,7 +51,16 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-        run: bundle exec rspec
+        run: |
+          bundle exec rspec
+          echo "Coverage report: $(grep 'Coverage is at' coverage/.last_run)"
+
+      - name: Upload coverage report
+        if: success() 
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage
 
       - name: Run RuboCop
         run: bundle exec rubocop

@@ -7,6 +7,11 @@ SimpleCov.start 'rails' do
   # SimpleCov.minimum_coverage 90
 end
 
+SimpleCov.at_exit do
+  SimpleCov.result.format!
+  puts "Coverage is at #{SimpleCov.result.covered_percent.round(2)}%"
+end
+
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
