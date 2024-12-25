@@ -57,7 +57,7 @@ end
   )
 end
 
-# Create Invoice Items linked to Invoices and Products
+# Iterate through invoices and create transactions
 Invoice.all.find_each do |invoice|
   2.times do
     InvoiceItem.create!(
@@ -68,7 +68,7 @@ Invoice.all.find_each do |invoice|
     )
   end
 
-  # Create Transactions linked to Invoices
+  # Create a transaction for the invoice
   Transaction.create!(
     invoice: invoice,
     credit_card_number: Faker::Finance.credit_card(:visa).gsub(/[^0-9]/, ''), # Ensure only digits
@@ -76,7 +76,6 @@ Invoice.all.find_each do |invoice|
     status: %i[successful failed].sample
   )
 end
-
 # Create Reviews linked to Products and Customers
 Product.all.find_each do |product|
   3.times do
@@ -88,12 +87,12 @@ Product.all.find_each do |product|
   end
 end
 
-puts 'Seeding completed!'
-puts "#{Admin.count} admins created."
-puts "#{Artisan.count} artisans created."
-puts "#{Customer.count} customers created."
-puts "#{Product.count} products created."
-puts "#{Invoice.count} invoices created."
-puts "#{InvoiceItem.count} invoice items created."
-puts "#{Transaction.count} transactions created."
-puts "#{Review.count} reviews created."
+Rails.logger.debug 'Seeding completed!'
+Rails.logger.debug "#{Admin.count} admins created."
+Rails.logger.debug "#{Artisan.count} artisans created."
+Rails.logger.debug "#{Customer.count} customers created."
+Rails.logger.debug "#{Product.count} products created."
+Rails.logger.debug "#{Invoice.count} invoices created."
+Rails.logger.debug "#{InvoiceItem.count} invoice items created."
+Rails.logger.debug "#{Transaction.count} transactions created."
+Rails.logger.debug "#{Review.count} reviews created."
