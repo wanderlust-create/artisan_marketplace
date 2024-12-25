@@ -88,8 +88,7 @@ Product.all.find_each do |product|
   end
 end
 
-# rubocop:disable Rails/Output
-puts "Seeding completed!"
+puts 'Seeding completed!'
 puts "#{Admin.count} admins created."
 puts "#{Artisan.count} artisans created."
 puts "#{Customer.count} customers created."
@@ -98,4 +97,3 @@ puts "#{Invoice.count} invoices created."
 puts "#{InvoiceItem.count} invoice items created."
 puts "#{Transaction.count} transactions created."
 puts "#{Review.count} reviews created."
-# rubocop:enable Rails/Output

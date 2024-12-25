@@ -1,5 +1,5 @@
 class InvoiceItemsController < ApplicationController
-  before_action :set_invoice_item, only: %i[ show edit update destroy ]
+  before_action :set_invoice_item, only: %i[show edit update destroy]
 
   # GET /invoice_items or /invoice_items.json
   def index
@@ -7,8 +7,7 @@ class InvoiceItemsController < ApplicationController
   end
 
   # GET /invoice_items/1 or /invoice_items/1.json
-  def show
-  end
+  def show; end
 
   # GET /invoice_items/new
   def new
@@ -16,8 +15,7 @@ class InvoiceItemsController < ApplicationController
   end
 
   # GET /invoice_items/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /invoice_items or /invoice_items.json
   def create
@@ -25,7 +23,7 @@ class InvoiceItemsController < ApplicationController
 
     respond_to do |format|
       if @invoice_item.save
-        format.html { redirect_to @invoice_item, notice: "Invoice item was successfully created." }
+        format.html { redirect_to @invoice_item, notice: 'Invoice item was successfully created.' }
         format.json { render :show, status: :created, location: @invoice_item }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +36,7 @@ class InvoiceItemsController < ApplicationController
   def update
     respond_to do |format|
       if @invoice_item.update(invoice_item_params)
-        format.html { redirect_to @invoice_item, notice: "Invoice item was successfully updated." }
+        format.html { redirect_to @invoice_item, notice: 'Invoice item was successfully updated.' }
         format.json { render :show, status: :ok, location: @invoice_item }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +50,22 @@ class InvoiceItemsController < ApplicationController
     @invoice_item.destroy
 
     respond_to do |format|
-      format.html { redirect_to invoice_items_path, status: :see_other, notice: "Invoice item was successfully destroyed." }
+      format.html do
+        redirect_to invoice_items_path, status: :see_other, notice: 'Invoice item was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_invoice_item
-      @invoice_item = InvoiceItem.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def invoice_item_params
-      params.require(:invoice_item).permit(:invoice_id, :product_id, :quantity, :unit_price)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_invoice_item
+    @invoice_item = InvoiceItem.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def invoice_item_params
+    params.require(:invoice_item).permit(:invoice_id, :product_id, :quantity, :unit_price)
+  end
 end
