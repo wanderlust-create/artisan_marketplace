@@ -1,6 +1,6 @@
 <h1>Login</h1>
 
-<%= form_with scope: :session, url: login_path, method: :post do |form| %>
+<%= form_with url: login_path, method: :post do |form| %>
   <div>
     <%= form.label :email %>
       <%= form.text_field :email %>
