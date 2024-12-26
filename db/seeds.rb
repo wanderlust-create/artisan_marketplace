@@ -39,7 +39,7 @@ end
 
 # Create Products linked to Artisans
 Artisan.all.find_each do |artisan|
-  rand(3..6).times do
+  rand(5..13).times do
     artisan.products.create!(
       name: Faker::Commerce.unique.product_name,
       description: Faker::Lorem.paragraph,
@@ -79,7 +79,7 @@ end
 
 # Create Reviews linked to Products and Customers
 Product.all.find_each do |product|
-  rand(1..5).times do
+  rand(2..5).times do
     product.reviews.create!(
       rating: rand(1..5),
       text: Faker::Lorem.paragraph,
