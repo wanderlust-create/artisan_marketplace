@@ -3,16 +3,16 @@ class SessionsController < ApplicationController
     # Render login form
   end
 
-def create
-  admin = Admin.find_by(email: params[:email])
-  if admin&.authenticate(params[:password])
-    session[:admin_id] = admin.id
-    redirect_to admin_path(admin), notice: 'Logged in successfully'
-  else
-    flash.now[:alert] = 'Invalid email or password'
-    render :new, status: :unprocessable_entity
+  def create
+    admin = Admin.find_by(email: params[:email])
+    if admin&.authenticate(params[:password])
+      session[:admin_id] = admin.id
+      redirect_to admin_path(admin), notice: 'Logged in successfully'
+    else
+      flash.now[:alert] = 'Invalid email or password'
+      render :new, status: :unprocessable_entity
+    end
   end
-end
 
   def destroy
     session[:admin_id] = nil
