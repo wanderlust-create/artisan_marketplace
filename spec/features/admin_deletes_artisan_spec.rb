@@ -9,7 +9,6 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
   end
 
   scenario 'Admin visits the new artisan page' do
-    binding.pry
     visit new_admin_artisan_path(admin)
     expect(page).to have_content('Create a New Artisan')
     expect(page).to have_field('Store Name')
@@ -45,6 +44,7 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
     fill_in 'Store Name', with: store_name
     fill_in 'Email', with: email
     fill_in 'Password', with: password
+    fill_in 'Confirm Password', with: password
     click_button 'Create Artisan'
   end
 end
