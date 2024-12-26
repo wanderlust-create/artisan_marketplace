@@ -1,0 +1,15 @@
+<h1>Artisan Successfully Updated</h1>
+
+<p>The artisan details have been updated successfully:</p>
+
+<ul>
+  <li><strong>Store Name:</strong>
+    <%= @artisan.store_name %>
+  </li>
+  <li><strong>Email:</strong>
+    <%= @artisan.email %>
+  </li>
+</ul>
+
+<%= link_to 'Back to Artisan List' , admin_artisans_path(@admin) %>
+

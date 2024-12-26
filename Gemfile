@@ -66,7 +66,12 @@ group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
 
   # RSpec for testing
-  gem 'rspec-rails', '~> 5.0' # RSpec 6.0 is available if you're using Rails 7+
+  gem 'rspec-rails', '~> 5.0'
+
+  gem 'capybara'
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'selenium-webdriver' # If you need JavaScript support
 end
 
 group :development do
