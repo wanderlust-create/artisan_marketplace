@@ -5,7 +5,7 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
 
   before do
     # Simulate admin login
-    login_as_admin(admin)
+    login_as(admin)
   end
 
   scenario 'Admin visits the new artisan page' do
@@ -31,13 +31,6 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
   end
 
   private
-
-  def login_as_admin(admin)
-    visit '/login'
-    fill_in 'Email', with: admin.email
-    fill_in 'Password', with: admin.password
-    click_button 'Login'
-  end
 
   def create_artisan(store_name, email, password)
     visit new_admin_artisan_path(admin)

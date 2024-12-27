@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get 'sessions/new'
-  get 'sessions/create'
-  get 'sessions/destroy'
   # Root path
   root 'application#welcome'
 
@@ -10,8 +7,19 @@ Rails.application.routes.draw do
     resources :artisans, only: %i[index new create edit update destroy]
   end
 
+  # Artisans and their related products
+  resources :artisans, only: %i[show] do
+    resources :products, only: %i[index new create edit update destroy]
+  end
+
   # Authentication routes
-  get '/login', to: 'sessions#new'
-  post '/login', to: 'sessions#create'
-  delete '/logout', to: 'sessions#destroy'
+  # get '/login', to: 'sessions#new'
+  # post '/login', to: 'sessions#create'
+  # delete '/logout', to: 'sessions#destroy'
+  #
+  scope :auth, as: :auth do
+    get '/login', to: 'sessions#new', as: :login
+    post '/login', to: 'sessions#create'
+    delete '/logout', to: 'sessions#destroy', as: :logout
+  end
 end
