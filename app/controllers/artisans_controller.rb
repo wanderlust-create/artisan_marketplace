@@ -26,7 +26,7 @@ class ArtisansController < ApplicationController
   def update
     @artisan = @admin.artisans.find(params[:id])
     if @artisan.update(artisan_params)
-      redirect_to admin_artisans_path(@admin), notice: 'Artisan was successfully updated.'
+      redirect_to admin_path(@admin), notice: 'Artisan was successfully updated.'
     else
       flash.now[:alert] = 'There was an error updating the artisan.'
       render :edit
@@ -36,7 +36,7 @@ class ArtisansController < ApplicationController
   def destroy
     @artisan = @admin.artisans.find(params[:id])
     @artisan.destroy
-    redirect_to admin_artisans_path(@admin), notice: 'Artisan was successfully deleted.'
+    redirect_to admin_path(@admin), notice: 'Artisan was successfully deleted.'
   end
 
   private
