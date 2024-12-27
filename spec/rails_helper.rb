@@ -25,6 +25,9 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 
+# Load support files for Rspec
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
+
 # Require RSpec and Rails
 require 'rspec/rails'
 
@@ -42,8 +45,11 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do
     driven_by :rack_test # Use :selenium for JavaScript-enabled tests
   end
-
+  # add routes helpers
   config.include Rails.application.routes.url_helpers
+
+  # Include SessionHelpers for feature specs
+  config.include SessionHelpers, type: :feature
 
   # Set the fixture path
   config.fixture_path = Rails.root.join('spec/fixtures').to_s
