@@ -43,6 +43,8 @@ RSpec.configure do |config|
     driven_by :rack_test # Use :selenium for JavaScript-enabled tests
   end
 
+  config.include Rails.application.routes.url_helpers
+
   # Set the fixture path
   config.fixture_path = Rails.root.join('spec/fixtures').to_s
 
