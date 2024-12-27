@@ -9,7 +9,7 @@ class ArtisansController < ApplicationController
     @artisan = @admin.artisans.new(artisan_params)
 
     if @artisan.save
-      redirect_to admin_artisans_path(@admin), notice: 'Artisan was successfully created.'
+      redirect_to admin_path(@admin), notice: 'Artisan was successfully created.'
     else
       render :new
     end
