@@ -1,5 +1,5 @@
 class ArtisansController < ApplicationController
-  before_action :set_admin
+  before_action :set_admin, only: %i[new create show edit update destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   def new
     @artisan = @admin.artisans.new
@@ -42,7 +42,15 @@ class ArtisansController < ApplicationController
   private
 
   def set_admin
-    @admin = Admin.find(params[:admin_id])
+    if params[:admin_id]
+      # When `admin_id` is explicitly provided (e.g., during creation)
+      @admin = Admin.find(params[:admin_id])
+    elsif params[:id]
+      # When showing or editing an artisan, use the foreign key on the artisan
+      @admin = Artisan.find(params[:id]).admin
+    else
+      raise ActiveRecord::RecordNotFound, 'Admin could not be determined'
+    end
   end
 
   def artisan_params
