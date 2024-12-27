@@ -33,7 +33,7 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
   private
 
   def login_as_admin(admin)
-    visit '/login'
+    visit auth_login_path
     fill_in 'Email', with: admin.email
     fill_in 'Password', with: admin.password
     click_button 'Login'
