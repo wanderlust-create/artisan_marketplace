@@ -19,7 +19,7 @@ Transaction.destroy_all
 end
 
 # Create Artisans linked to Admins
-10.times do
+30.times do
   Artisan.create!(
     store_name: Faker::Company.unique.name,
     email: Faker::Internet.unique.email,
@@ -97,3 +97,15 @@ Rails.logger.debug "#{Invoice.count} invoices created."
 Rails.logger.debug "#{InvoiceItem.count} invoice items created."
 Rails.logger.debug "#{Transaction.count} transactions created."
 Rails.logger.debug "#{Review.count} reviews created."
+
+# rubocop:disable Rails/Output
+puts "Seeding completed!"
+puts "#{Admin.count} admins created."
+puts "#{Artisan.count} artisans created."
+puts "#{Customer.count} customers created."
+puts "#{Product.count} products created."
+puts "#{Invoice.count} invoices created."
+puts "#{InvoiceItem.count} invoice items created."
+puts "#{Transaction.count} transactions created."
+puts "#{Review.count} reviews created."
+# rubocop:enable Rails/Output
