@@ -99,7 +99,7 @@ Rails.logger.debug "#{Transaction.count} transactions created."
 Rails.logger.debug "#{Review.count} reviews created."
 
 # rubocop:disable Rails/Output
-puts "Seeding completed!"
+puts 'Seeding completed!'
 puts "#{Admin.count} admins created."
 puts "#{Artisan.count} artisans created."
 puts "#{Customer.count} customers created."
