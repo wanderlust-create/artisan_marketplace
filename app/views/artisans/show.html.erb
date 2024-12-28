@@ -1,0 +1,36 @@
+<h2>Your Products</h2>
+<%= link_to 'Create New Product' , new_artisan_product_path(@artisan), class: 'btn btn-primary' %>
+
+  <% if @artisan.products.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Quanity In Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @artisan.products.each do |product| %>
+          <tr>
+            <td>
+              <%= product.name %>
+            </td>
+            <td>
+              <%= product.price %>
+            </td>
+            <td>
+              <%= product.stock %>
+            </td>
+            <td>
+              <%= link_to 'Edit Product' , edit_artisan_product_path(@artisan, product), class: 'btn btn-secondary' %> |
+                <%= link_to 'Delete Product' , artisan_product_path(@artisan, product), data: { turbo_method: :delete,
+                  turbo_confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+          <% end %>
+      </tbody>
+    </table>
+    <% else %>
+      <p>No artisans yet. Start by <%= link_to 'creating a new artisan' , new_admin_artisan_path(@admin) %>.</p>
+      <% end %>
