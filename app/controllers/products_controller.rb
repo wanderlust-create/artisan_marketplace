@@ -1,11 +1,13 @@
 class ProductsController < ApplicationController
-  before_action :set_artisan, only: %i[new create show destroy]
+  before_action :set_artisan, only: %i[new create show edit update destroy]
 
   def index
     @products = Product.all
   end
 
-  def show; end
+  def show
+    @product = Product.find(params[:id])
+  end
 
   def new
     @product = @artisan.products.new
@@ -20,20 +22,19 @@ class ProductsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    @product = @artisan.products.find(params[:id])
+  end
 
-  # # PATCH/PUT /products/1 or /products/1.json
-  # def update
-  #   respond_to do |format|
-  #     if @product.update(product_params)
-  #       format.html { redirect_to @product, notice: 'Product was successfully updated.' }
-  #       format.json { render :show, status: :ok, location: @product }
-  #     else
-  #       format.html { render :edit, status: :unprocessable_entity }
-  #       format.json { render json: @product.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
+  def update
+    @product = Product.find(params[:id])
+    if @product.update(product_params)
+      redirect_to artisan_product_path(@artisan, @product), notice: 'Product was successfully updated.'
+    else
+      flash.now[:alert] = 'There was an error updating the product.'
+      render :edit
+    end
+  end
 
   def destroy
     @product = Product.find(params[:id])
