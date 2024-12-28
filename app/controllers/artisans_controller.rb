@@ -1,8 +1,13 @@
 class ArtisansController < ApplicationController
-  before_action :set_admin, only: %i[new create show edit update destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
+  before_action :set_admin, only: %i[new create show edit update destroy]
+  before_action :set_artisan, only: [:show]
 
   def new
     @artisan = @admin.artisans.new
+  end
+
+  def show
+    # @artisan is set via before_action
   end
 
   def create
@@ -51,6 +56,10 @@ class ArtisansController < ApplicationController
     else
       raise ActiveRecord::RecordNotFound, 'Admin could not be determined'
     end
+  end
+
+  def set_artisan
+    @artisan = Artisan.find(params[:id])
   end
 
   def artisan_params
