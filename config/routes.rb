@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   # Artisans and their related products
   resources :artisans, only: %i[show] do
-    resources :products, only: %i[index new create edit update destroy]
+    resources :products, only: %i[index new create show edit update destroy]
   end
 
   scope :auth, as: :auth do
