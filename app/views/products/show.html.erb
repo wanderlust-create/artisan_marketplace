@@ -1,10 +1,18 @@
-<p style="color: green"><%= notice %></p>
+<p class="notice">
+  <%= notice %>
+</p>
 
 <%= render @product %>
 
-<div>
-  <%= link_to "Edit this product", edit_product_path(@product) %> |
-  <%= link_to "Back to products", products_path %>
-
-  <%= button_to "Destroy this product", @product, method: :delete %>
-</div>
+  <div>
+    <td>
+      <%= link_to 'Edit #{@product.name}', edit_artisan_product_path(@product), class: 'btn btn-secondary' %> |
+      <%= link_to 'Delete #{@product.name}', artisan_product_path(@product), 
+        data: { 
+          turbo_method: :delete,
+          turbo_confirm: 'Are you sure you want to delete your #{@product.name}?' 
+        } %>
+                    turbo_confirm: "Are you sure you want to delete your #{@product.name}?" } %>
+    </td>
+  </div>
+  <%= link_to 'Back to Artisan Homepage' , artisan_path(@artisan) %>
