@@ -1,65 +1,62 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[show edit update destroy]
+  before_action :set_artisan, only: %i[new create show]
 
-  # GET /products or /products.json
   def index
     @products = Product.all
   end
 
-  # GET /products/1 or /products/1.json
   def show; end
 
-  # GET /products/new
   def new
-    @product = Product.new
+    @product = @artisan.products.new
   end
 
-  # GET /products/1/edit
+  def create
+    @product = @artisan.products.new(product_params)
+    if @product.save
+      redirect_to artisan_path(@artisan), notice: 'Product was successfully created.'
+    else
+      render :new
+    end
+  end
+
   def edit; end
 
-  # POST /products or /products.json
-  def create
-    @product = Product.new(product_params)
+  # # PATCH/PUT /products/1 or /products/1.json
+  # def update
+  #   respond_to do |format|
+  #     if @product.update(product_params)
+  #       format.html { redirect_to @product, notice: 'Product was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @product }
+  #     else
+  #       format.html { render :edit, status: :unprocessable_entity }
+  #       format.json { render json: @product.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
-    respond_to do |format|
-      if @product.save
-        format.html { redirect_to @product, notice: 'Product was successfully created.' }
-        format.json { render :show, status: :created, location: @product }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # # DELETE /products/1 or /products/1.json
+  # def destroy
+  #   @product.destroy
 
-  # PATCH/PUT /products/1 or /products/1.json
-  def update
-    respond_to do |format|
-      if @product.update(product_params)
-        format.html { redirect_to @product, notice: 'Product was successfully updated.' }
-        format.json { render :show, status: :ok, location: @product }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /products/1 or /products/1.json
-  def destroy
-    @product.destroy
-
-    respond_to do |format|
-      format.html { redirect_to products_path, status: :see_other, notice: 'Product was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  #   respond_to do |format|
+  #     format.html { redirect_to products_path, status: :see_other, notice: 'Product was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_product
-    @product = Product.find(params[:id])
+  def set_artisan
+    if params[:artisan_id]
+      # When `artisan_id` is explicitly provided (e.g., during creation)
+      @artisan = Artisan.find(params[:artisan_id])
+    elsif params[:id]
+      # When showing or editing a product, use the foreign key on the artisan
+      @artisan = Artisan.find(params[:id]).admin
+    else
+      raise ActiveRecord::RecordNotFound, 'Artisan could not be determined'
+    end
   end
 
   # Only allow a list of trusted parameters through.
