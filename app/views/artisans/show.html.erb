@@ -1,5 +1,5 @@
 <h2>Your Products</h2>
-<%= link_to 'Create New Product' , new_artisan_product_path(@artisan), class: 'btn btn-primary' %>
+<%= link_to 'Create New Product', new_artisan_product_path(@artisan), class: 'btn btn-primary' %>
 
   <% if @artisan.products.any? %>
     <table>
@@ -7,7 +7,7 @@
         <tr>
           <th>Product Name</th>
           <th>Price</th>
-          <th>Quanity In Stock</th>
+          <th>Quantity In Stock</th>
         </tr>
       </thead>
       <tbody>
@@ -17,20 +17,20 @@
               <%= product.name %>
             </td>
             <td>
-              <%= product.price %>
+              <%= number_to_currency(product.price, unit: '$' ) %>
             </td>
             <td>
               <%= product.stock %>
             </td>
             <td>
-              <%= link_to 'Edit Product' , edit_artisan_product_path(@artisan, product), class: 'btn btn-secondary' %> |
-                <%= link_to 'Delete Product' , artisan_product_path(@artisan, product), data: { turbo_method: :delete,
-                  turbo_confirm: "Are you sure?" } %>
+              <%= link_to 'Edit Product', edit_artisan_product_path(@artisan, product), class: 'btn btn-secondary' %> |
+                <%= link_to "Delete #{product.name}", artisan_product_path(@artisan, product), data: { turbo_method: :delete,
+                  turbo_confirm: "Are you sure you want to delete your #{product.name}?" } %>
             </td>
           </tr>
           <% end %>
       </tbody>
     </table>
     <% else %>
-      <p>No artisans yet. Start by <%= link_to 'creating a new artisan' , new_admin_artisan_path(@admin) %>.</p>
+      <p>No artisans yet. Start by <%= link_to 'creating a new artisan', new_admin_artisan_path(@admin) %>.</p>
       <% end %>
