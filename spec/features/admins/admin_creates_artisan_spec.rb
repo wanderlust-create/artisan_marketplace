@@ -25,7 +25,7 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
 
   scenario 'The created artisan appears in the list' do
     create_artisan('Artisan Wonders', 'artisan@example.com', 'securepassword')
-    visit admin_artisans_path(admin)
+    visit admin_path(admin)
     expect(page).to have_content('Artisan Wonders')
     expect(page).to have_content('artisan@example.com')
   end

@@ -1,15 +1,20 @@
 class ArtisansController < ApplicationController
-  before_action :set_admin
+  before_action :set_admin, only: %i[new create show edit update destroy]
+  before_action :set_artisan, only: [:show]
 
   def new
     @artisan = @admin.artisans.new
+  end
+
+  def show
+    # @artisan is set via before_action
   end
 
   def create
     @artisan = @admin.artisans.new(artisan_params)
 
     if @artisan.save
-      redirect_to admin_artisans_path(@admin), notice: 'Artisan was successfully created.'
+      redirect_to admin_path(@admin), notice: 'Artisan was successfully created.'
     else
       render :new
     end
@@ -42,7 +47,19 @@ class ArtisansController < ApplicationController
   private
 
   def set_admin
-    @admin = Admin.find(params[:admin_id])
+    if params[:admin_id]
+      # When `admin_id` is explicitly provided (e.g., during creation)
+      @admin = Admin.find(params[:admin_id])
+    elsif params[:id]
+      # When showing or editing an artisan, use the foreign key on the artisan
+      @admin = Artisan.find(params[:id]).admin
+    else
+      raise ActiveRecord::RecordNotFound, 'Admin could not be determined'
+    end
+  end
+
+  def set_artisan
+    @artisan = Artisan.find(params[:id])
   end
 
   def artisan_params
