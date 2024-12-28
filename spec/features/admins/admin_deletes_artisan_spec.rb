@@ -16,14 +16,24 @@ RSpec.feature 'AdminDeletesArtisan', type: :feature do
   scenario 'Admin deletes an artisan with Turbo confirmation', :js do
     visit admin_path(admin)
 
+    # Check that the artisan is listed
     expect(page).to have_content('Artisan Wonders')
 
     # Handle Turbo's confirmation modal
-    accept_confirm do
-      click_link 'Delete Artisan Data'
+    accept_confirm 'Are you sure you want to delete all data for Artisan Wonders?' do
+      click_link 'Delete Data for Artisan Wonders'
     end
 
-    expect(page).to have_content('Artisan was successfully deleted.')
-    expect(page).not_to have_content('Artisan Wonders')
+    # Check for success message
+    expect(page).to have_content('Artisan Artisan Wonders and all associated data were successfully deleted.')
+
+    # Verify artisan list or fallback message
+    if admin.artisans.any?
+      within('#artisan-list') do
+        expect(page).not_to have_content('Artisan Wonders')
+      end
+    else
+      expect(page).to have_content('No artisans yet. Start by creating a new artisan.')
+    end
   end
 end
