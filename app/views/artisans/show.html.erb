@@ -24,13 +24,13 @@
             </td>
             <td>
               <%= link_to 'Edit Product', edit_artisan_product_path(@artisan, product), class: 'btn btn-secondary' %> |
-                <%= link_to "Delete #{product.name}", artisan_product_path(@artisan, product), data: { turbo_method: :delete,
-                  turbo_confirm: "Are you sure you want to delete your #{product.name}?" } %>
+                <%= link_to "Delete #{product.name}", artisan_product_path(@artisan, product), 
+                    data: { turbo_method: :delete, 
+                            turbo_confirm: "Are you sure you want to delete your #{product.name}?" } %>
             </td>
           </tr>
           <% end %>
       </tbody>
     </table>
-    <% else %>
-      <p>No artisans yet. Start by <%= link_to 'creating a new artisan', new_admin_artisan_path(@admin) %>.</p>
+      <p>No products yet. Start by <%= link_to 'creating a new product', new_artisan_product_path(@artisan) %>.</p>
       <% end %>
