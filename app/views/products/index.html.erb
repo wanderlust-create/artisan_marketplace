@@ -1,14 +1,16 @@
-<p style="color: green"><%= notice %></p>
+<p class="notice">
+  <%= notice %>
+</p>
 
-<h1>Products</h1>
+<h1>All Products</h1>
 
 <div id="products">
   <% @products.each do |product| %>
     <%= render product %>
-    <p>
-      <%= link_to "Show this product", product %>
-    </p>
-  <% end %>
+      <p>
+        <%= link_to "Show #{product.name}", artisan_product_path(@artisan, product), class: 'btn btn-secondary' %>
+      </p>
+      <% end %>
 </div>
 
-<%= link_to "New product", new_product_path %>
+<%= link_to 'Back to Artisan Homepage', artisan_path(@artisan), class: 'btn btn-primary' %>

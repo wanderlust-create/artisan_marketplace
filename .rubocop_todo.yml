@@ -94,3 +94,6 @@ RSpec/ExampleLength:
 
 Lint/Syntax:
   Enabled: true
+
+AllCops:
+  SuggestExtensions: false
