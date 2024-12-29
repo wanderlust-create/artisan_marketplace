@@ -1,5 +1,4 @@
-<h1>Artisans for <%= @admin.email %>
-</h1>
+<h1>Artisans for <%= @admin.email %></h1>
 
 <table>
   <thead>
@@ -19,13 +18,11 @@
           <%= artisan.email %>
         </td>
         <td>
-          <%= link_to 'Edit' , edit_admin_artisan_path(@admin, artisan) %> |
-            <%= link_to 'Delete' , admin_artisan_path(@admin, artisan), method: :delete, data: {
-              confirm: 'Are you sure?' } %>
+          <%= link_to 'Edit', edit_admin_artisan_path(@admin, artisan), confirm: 'Are you sure?' %>
         </td>
       </tr>
       <% end %>
   </tbody>
 </table>
 
-<%= link_to 'Create New Artisan' , new_admin_artisan_path(@admin) %>
+<%= link_to 'Create New Artisan', new_admin_artisan_path(@admin) %>
