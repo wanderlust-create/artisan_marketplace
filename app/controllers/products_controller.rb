@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_artisan, only: %i[new create show edit update destroy]
+  before_action :set_artisan, only: %i[index show new create edit update destroy]
 
   def index
     @products = Product.all
@@ -46,17 +46,14 @@ class ProductsController < ApplicationController
 
   def set_artisan
     if params[:artisan_id]
-      # When `artisan_id` is explicitly provided (e.g., during creation)
       @artisan = Artisan.find(params[:artisan_id])
     elsif params[:id]
-      # When showing or editing a product, use the foreign key on the artisan
       @artisan = Artisan.find(params[:id]).admin
     else
       raise ActiveRecord::RecordNotFound, 'Artisan could not be determined'
     end
   end
 
-  # Only allow a list of trusted parameters through.
   def product_params
     params.require(:product).permit(:name, :description, :price, :stock, :artisan_id)
   end
