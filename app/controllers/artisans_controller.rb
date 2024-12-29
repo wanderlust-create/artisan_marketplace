@@ -1,13 +1,17 @@
 class ArtisansController < ApplicationController
-  before_action :set_admin, only: %i[new create show edit update destroy]
+  before_action :set_admin, only: %i[show new create edit update destroy]
   before_action :set_artisan, only: [:show]
 
-  def new
-    @artisan = @admin.artisans.new
+  def index
+    @artisans = @admin.artisans
   end
 
   def show
     # @artisan is set via before_action
+  end
+
+  def new
+    @artisan = @admin.artisans.new
   end
 
   def create
@@ -18,10 +22,6 @@ class ArtisansController < ApplicationController
     else
       render :new
     end
-  end
-
-  def index
-    @artisans = @admin.artisans
   end
 
   def edit

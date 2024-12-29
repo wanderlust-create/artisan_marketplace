@@ -1,23 +1,18 @@
 class AdminsController < ApplicationController
   before_action :set_admin, only: %i[show edit update destroy]
 
-  # GET /admins or /admins.json
   def index
     @admins = Admin.all
   end
 
-  # GET /admins/1 or /admins/1.json
   def show; end
 
-  # GET /admins/new
   def new
     @admin = Admin.new
   end
 
-  # GET /admins/1/edit
   def edit; end
 
-  # POST /admins or /admins.json
   def create
     @admin = Admin.new(admin_params)
 
