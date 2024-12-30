@@ -11,13 +11,17 @@ Rails.application.routes.draw do
 
   # Admins and their related artisans
   resources :admins, only: %i[new show index create update] do
+    member do
+      get 'dashboard', to: 'admins#dashboard'
+    end
     resources :artisans, only: %i[index new create edit update destroy]
-    get 'dashboard', to: 'admin/dashboards#show', as: :dashboard
   end
 
   # Artisans and their related products
   resources :artisans, only: %i[show] do
+    member do
+      get 'dashboard', to: 'artisans#dashboard'
+    end
     resources :products, only: %i[index new create show edit update destroy]
-    get 'dashboard', to: 'artisan/dashboards#show', as: :dashboard
   end
 end
