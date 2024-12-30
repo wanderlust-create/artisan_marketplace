@@ -16,7 +16,8 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
-    redirect_to root_path, notice: 'You have been logged out.'
+    session[:role] = nil
+    redirect_to root_path, notice: 'Logged out successfully.'
   end
 
   private
@@ -30,18 +31,17 @@ class SessionsController < ApplicationController
     session[:role] = user.role if user.is_a?(Admin) # Save role if user is an admin
   end
 
-def dashboard_path_for(user)
-  if user.is_a?(Admin)
-    # TODO: Implement super_admin_dashboard_path and use it here
-    # return super_admin_dashboard_path if user.super_admin?
-    return dashboard_admin_path(user.id)
-  elsif user.is_a?(Artisan)
-    return dashboard_artisan_path(user.id)
+  def dashboard_path_for(user)
+    if user.is_a?(Admin)
+      # TODO: Implement super_admin_dashboard_path and use it here
+      # return super_admin_dashboard_path if user.super_admin?
+      return dashboard_admin_path(user.id)
+    elsif user.is_a?(Artisan)
+      return dashboard_artisan_path(user.id)
+    end
+
+    root_path
   end
-
-  root_path
-end
-
 
   def handle_login_failure
     flash.now[:alert] = 'Invalid email or password. Please try again.'
