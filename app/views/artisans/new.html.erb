@@ -1,4 +1,3 @@
-
 <h1>Create a New Artisan for <%= @admin.email %>
 </h1>
 
@@ -28,4 +27,4 @@
   </div>
   <% end %>
 
-    <%= link_to 'Back to Artisan Homepage' , admin_path(@admin) %>
+    <%= link_to 'Back to Dashboard', dashboard_admin_path(@admin), class: 'btn btn-primary' %>
