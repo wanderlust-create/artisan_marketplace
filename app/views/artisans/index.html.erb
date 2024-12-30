@@ -5,7 +5,7 @@
 </div>
 
 <% if @artisans.any? %>
-  <table class="table table-striped">
+  <table id="artisan-list">
     <thead>
       <tr>
         <th>Store Name</th>
@@ -23,14 +23,14 @@
             <%= artisan.email %>
           </td>
           <td>
-            <%= link_to "Show Artisan" , artisan_path(artisan.id), class: 'btn btn-secondary' %>
+            <%= link_to "Show #{artisan.store_name}" , artisan_path(artisan.id), class: 'btn btn-secondary' %>
           </td>
         </tr>
         <% end %>
     </tbody>
   </table>
   <% else %>
-    <p>You currently have no artisans.</p>
+    <p>You currently have no artisans. Start by creating a new artisan.</p>
     <% end %>
 
       <%= link_to 'Back to Dashboard' , dashboard_admin_path(@admin), class: 'btn btn-primary' %>
