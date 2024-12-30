@@ -66,11 +66,11 @@ group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
 
   # RSpec for testing
-  gem 'rspec-rails', '~> 5.0'
-
   gem 'capybara'
+  gem 'kaminari'
   gem 'pry'
   gem 'pry-rails'
+  gem 'rspec-rails', '~> 5.0'
   gem 'selenium-webdriver' # If you need JavaScript support
 end
 
