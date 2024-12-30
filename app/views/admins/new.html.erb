@@ -1,9 +1,34 @@
-<h1>New admin</h1>
+<% if @admin.errors.any? %>
+  <div class="error-messages">
+    <h2>There was an error creating the admin:</h2>
+    <ul>
+      <% @admin.errors.full_messages.each do |message| %>
+        <li>
+          <%=h message %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
-<%= render "form", admin: @admin %>
 
-<br>
-
-<div>
-  <%= link_to "Back to admins", admins_path %>
-</div>
+    <%= form_with(model: @admin, url: admins_path, method: :post, local: true) do |form| %>
+      <div>
+        <%= form.label :email, "Email", required: true %>
+          <%= form.email_field :email %>
+      </div>
+    
+      <div>
+        <%= form.label :password, "Password", required: true %>
+        <%= form.password_field :password %>
+      </div>
+    
+      <div>
+        <%= form.label :password_confirmation, "Confirm Password", required: true %>
+        <%= form.password_field :password_confirmation %>
+      </div>
+    
+      <div>
+        <%= form.submit "Create Admin" %>
+      </div>
+    <% end %>

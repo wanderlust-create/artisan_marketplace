@@ -4,9 +4,9 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = find_user_by_email
+    user = find_user_by_email(params[:email])
 
-    if authenticate_user(user)
+    if user&.authenticate(params[:password])
       log_in_user(user)
       redirect_to dashboard_path_for(user)
     else
@@ -16,32 +16,35 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
-    session[:user_type] = nil
-    redirect_to root_path, notice: 'Logged out successfully'
+    session[:role] = nil
+    redirect_to root_path, notice: 'Logged out successfully.'
   end
 
   private
 
-  # TODO: - unique email is not checked across both Admin & Artisan dbs. This will always log in as Admin. Need to find a way to add a unique email across both databases
-  def find_user_by_email
-    Admin.find_by(email: params[:email]) || Artisan.find_by(email: params[:email])
-  end
-
-  def authenticate_user(user)
-    user&.authenticate(params[:password])
+  def find_user_by_email(email)
+    Admin.find_by(email: email) || Artisan.find_by(email: email)
   end
 
   def log_in_user(user)
     session[:user_id] = user.id
-    session[:user_type] = user.class.name.downcase
+    session[:role] = user.role if user.is_a?(Admin) # Save role if user is an admin
   end
 
   def dashboard_path_for(user)
-    user.is_a?(Admin) ? admin_path(user.id) : artisan_path(user.id)
+    if user.is_a?(Admin)
+      # TODO: Implement super_admin_dashboard_path and use it here
+      # return super_admin_dashboard_path if user.super_admin?
+      return dashboard_admin_path(user.id)
+    elsif user.is_a?(Artisan)
+      return dashboard_artisan_path(user.id)
+    end
+
+    root_path
   end
 
   def handle_login_failure
-    flash.now[:alert] = 'Invalid email or password'
+    flash.now[:alert] = 'Invalid email or password. Please try again.'
     render :new
   end
 end

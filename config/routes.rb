@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
+  get 'welcome/index'
   # Root path
-  root 'application#welcome'
+  root 'welcome#index'
 
   # Authentication routes
   scope :auth, as: :auth do
