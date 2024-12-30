@@ -16,7 +16,7 @@ class ProductsController < ApplicationController
   def create
     @product = @artisan.products.build(product_params)
     if @product.save
-      redirect_to artisan_path(@artisan), notice: 'Product was successfully created.'
+      redirect_to dashboard_artisan_path(@artisan), notice: 'Product was successfully created.'
     else
       render :new
     end
