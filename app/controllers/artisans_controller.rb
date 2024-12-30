@@ -1,5 +1,5 @@
 class ArtisansController < ApplicationController
-  before_action :set_admin, only: %i[show new create edit update destroy]
+  before_action :set_admin, only: %i[index show new create edit update destroy]
   before_action :set_artisan, only: [:show]
 
   def index
@@ -11,11 +11,11 @@ class ArtisansController < ApplicationController
   end
 
   def new
-    @artisan = @admin.artisans.new
+    @artisan = @admin.artisans.build
   end
 
   def create
-    @artisan = @admin.artisans.new(artisan_params)
+    @artisan = @admin.artisans.build(artisan_params)
 
     if @artisan.save
       redirect_to admin_path(@admin), notice: 'Artisan was successfully created.'
@@ -46,6 +46,11 @@ class ArtisansController < ApplicationController
     else
       redirect_to admin_path(@admin), alert: "Failed to delete Artisan #{store_name}."
     end
+  end
+
+  def dashboard
+    @artisan = Artisan.find(params[:id])
+    @products = @artisan.products
   end
 
   private
