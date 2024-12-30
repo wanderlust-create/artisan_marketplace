@@ -8,36 +8,44 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
     login_as(admin)
   end
 
-  scenario 'Admin visits the new artisan page' do
-    visit new_admin_artisan_path(admin)
-    expect(page).to have_content('Create a New Artisan')
-    expect(page).to have_field('Store Name')
-    expect(page).to have_field('Email')
-    expect(page).to have_field('Password')
+  scenario 'Admin visits the artisan index page and navigates to the new artisan page' do
+    visit admin_artisans_path(admin)
+    expect(page).to have_content('Your Artisans') # Step 1
+    expect(page).to have_link('Add New Artisan')  # Step 2
+
+    click_link 'Add New Artisan'
+    expect(page).to have_content('Create a New Artisan') # Step 3
+    expect(page).to have_field('Store Name')             # Step 4
+    expect(page).to have_field('Email')                  # Step 5
   end
 
   scenario 'Admin fills in and submits the artisan form' do
-    create_artisan('Artisan Wonders', 'artisan@example.com', 'securepassword')
+    visit admin_artisans_path(admin)
+    click_link 'Add New Artisan'
+
+    fill_in 'Store Name', with: 'Artisan Wonders' # Step 1
+    fill_in 'Email', with: 'artisan@example.com'  # Step 2
+    fill_in 'Password', with: 'securepassword'    # Step 3
+    fill_in 'Confirm Password', with: 'securepassword' # Step 4
+    click_button 'Create Artisan'                      # Step 5
+
     expect(page).to have_content('Artisan was successfully created.')
     expect(page).to have_content('Artisan Wonders')
     expect(page).to have_content('artisan@example.com')
   end
 
   scenario 'The created artisan appears in the list' do
-    create_artisan('Artisan Wonders', 'artisan@example.com', 'securepassword')
-    visit admin_path(admin)
-    expect(page).to have_content('Artisan Wonders')
-    expect(page).to have_content('artisan@example.com')
-  end
+    visit admin_artisans_path(admin)
+    click_link 'Add New Artisan'
 
-  private
+    fill_in 'Store Name', with: 'Artisan Wonders' # Step 1
+    fill_in 'Email', with: 'artisan@example.com'  # Step 2
+    fill_in 'Password', with: 'securepassword'    # Step 3
+    fill_in 'Confirm Password', with: 'securepassword' # Step 4
+    click_button 'Create Artisan'                      # Step 5
 
-  def create_artisan(store_name, email, password)
-    visit new_admin_artisan_path(admin)
-    fill_in 'Store Name', with: store_name
-    fill_in 'Email', with: email
-    fill_in 'Password', with: password
-    fill_in 'Confirm Password', with: password
-    click_button 'Create Artisan'
+    visit admin_artisans_path(admin)
+    expect(page).to have_content('Artisan Wonders') # Step 1
+    expect(page).to have_content('artisan@example.com') # Step 2
   end
 end
