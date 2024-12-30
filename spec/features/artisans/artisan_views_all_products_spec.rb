@@ -12,7 +12,7 @@ RSpec.describe 'ArtisanViewsAllProducts', type: :feature do
 
   scenario 'Artisan visits the products index page' do
     visit artisan_products_path(artisan)
-    expect(page).to have_content('All Products')
+    expect(page).to have_content('Your Products')
 
     [first_product, second_product].each do |product|
       expect(page).to have_content(product.name)
