@@ -4,9 +4,12 @@
 
 <%= render @product %>
 
-<div>
-    <%= link_to "Edit #{@product.name}", edit_artisan_product_path(@product), class: 'btn btn-secondary' %> |
-  <%= link_to "Delete #{@product.name}",artisan_product_path(@product), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete your #{@product.name}?" }, class: 'btn btn-danger' %>
-</div>
+  <div>
+    <%= link_to "Edit #{@product.name}" , edit_artisan_product_path(@product.artisan, @product),
+      class: 'btn btn-secondary' %>
+      |
+      <%= link_to "Delete #{@product.name}" ,artisan_product_path(@product.artisan, @product), data: { turbo_method: :delete,
+        turbo_confirm: "Are you sure you want to delete your #{@product.name}?" }, class: 'btn btn-danger' %>
+  </div>
 
-<%= link_to 'Back to Artisan Homepage',artisan_path(@artisan), class: 'btn btn-primary' %>
+  <%= link_to 'Back to Dashboard' , dashboard_artisan_path(@artisan), class: 'btn btn-primary' %>
