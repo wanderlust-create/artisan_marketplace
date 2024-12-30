@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
 
     if user&.authenticate(params[:password])
       log_in_user(user)
-      redirect_to dashboard_path_for(user), notice: "Welcome back, #{user.role.capitalize}!"
+      redirect_to dashboard_path_for(user)
     else
       handle_login_failure
     end
@@ -34,9 +34,9 @@ def dashboard_path_for(user)
   if user.is_a?(Admin)
     # TODO: Implement super_admin_dashboard_path and use it here
     # return super_admin_dashboard_path if user.super_admin?
-    return dashboard_admin_path
+    return dashboard_admin_path(user.id)
   elsif user.is_a?(Artisan)
-    return dashboard_artisan_path
+    return dashboard_artisan_path(user.id)
   end
 
   root_path
