@@ -9,7 +9,7 @@ RSpec.feature 'AdminDeletesArtisan', type: :feature do
   end
 
   # Rubocop is disabled for this block because the scenario needs to test multiple steps and the Artisan needs to stay deleted
-  scenario 'Admin deletes an artisan and verifies it is no longer listed', :js do # rubocop:disable Metrics/BlockLength,RSpec/ExampleLength,RSpec/MultipleExpectations
+  scenario 'Admin deletes an artisan and verifies it is no longer listed', :js do # rubocop:disable RSpec/ExampleLength,RSpec/MultipleExpectations
     # Step 1: Navigate to the artisan show page
     visit artisan_path(artisan)
     expect(page).to have_content('Artisan Wonders')
