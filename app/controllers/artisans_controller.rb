@@ -18,7 +18,7 @@ class ArtisansController < ApplicationController
     @artisan = @admin.artisans.build(artisan_params)
 
     if @artisan.save
-      redirect_to admin_path(@admin), notice: 'Artisan was successfully created.'
+      redirect_to dashboard_admin_path(@admin), notice: 'Artisan was successfully created.'
     else
       render :new
     end
@@ -31,7 +31,7 @@ class ArtisansController < ApplicationController
   def update
     @artisan = @admin.artisans.find(params[:id])
     if @artisan.update(artisan_params)
-      redirect_to admin_path(@admin), notice: 'Artisan was successfully updated.'
+      redirect_to artisan_path(@artisan), notice: 'Artisan was successfully updated.'
     else
       flash.now[:alert] = 'There was an error updating the artisan.'
       render :edit
@@ -42,9 +42,9 @@ class ArtisansController < ApplicationController
     @artisan = @admin.artisans.find(params[:id])
     store_name = @artisan.store_name # Fetch the store name before deletion
     if @artisan.destroy
-      redirect_to admin_path(@admin), notice: "Artisan #{store_name} and all associated data were successfully deleted."
+      redirect_to dashboard_admin_path(@admin), notice: "Artisan #{store_name} and all associated data were successfully deleted."
     else
-      redirect_to admin_path(@admin), alert: "Failed to delete Artisan #{store_name}."
+      redirect_to dashboard_admin_path(@admin), alert: "Failed to delete Artisan #{store_name}."
     end
   end
 
