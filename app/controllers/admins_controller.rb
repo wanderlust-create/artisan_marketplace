@@ -13,7 +13,9 @@ class AdminsController < ApplicationController
     @admin = Admin.new
   end
 
-  def edit; end
+  def edit
+    # `@admin` is already set by `set_admin`
+  end
 
   def create
     @admin = Admin.new(admin_params.merge(role: 'regular')) # Ensure default role is regular
@@ -66,6 +68,10 @@ class AdminsController < ApplicationController
   end
 
   def admin_params
-    params.require(:admin).permit(:email, :password, :password_confirmation)
+    if current_user&.super_admin?
+      params.require(:admin).permit(:email, :password, :password_confirmation, :role)
+    else
+      params.require(:admin).permit(:email, :password, :password_confirmation)
+    end
   end
 end
