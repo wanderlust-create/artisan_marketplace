@@ -1,6 +1,11 @@
 class AdminsController < ApplicationController
   before_action :set_admin, only: %i[show edit update destroy]
 
+  def dashboard
+    @admin = Admin.find(params[:id])
+    @artisans = @admin.artisans
+  end
+
   def index
     @admins = Admin.all
   end
