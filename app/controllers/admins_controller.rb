@@ -1,13 +1,10 @@
 class AdminsController < ApplicationController
   before_action :set_admin, only: %i[show edit update destroy]
-
-  def dashboard
-    @admin = Admin.find(params[:id])
-    @artisans = @admin.artisans
-  end
+  before_action :require_super_admin, only: %i[new create destroy]
+  before_action :authorize_admin_edit!, only: %i[edit update]
 
   def index
-    @admins = Admin.all
+    @admins = Admin.page(params[:page]).per(10) # Paginate for scalability
   end
 
   def show; end
@@ -19,51 +16,56 @@ class AdminsController < ApplicationController
   def edit; end
 
   def create
-    @admin = Admin.new(admin_params)
+    @admin = Admin.new(admin_params.merge(role: 'regular')) # Ensure default role is regular
 
-    respond_to do |format|
-      if @admin.save
-        format.html { redirect_to @admin, notice: 'Admin was successfully created.' }
-        format.json { render :show, status: :created, location: @admin }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @admin.errors, status: :unprocessable_entity }
-      end
+    if @admin.save
+      redirect_to admins_path, notice: 'Admin was successfully created.'
+    else
+      render :new
     end
   end
 
-  # PATCH/PUT /admins/1 or /admins/1.json
   def update
-    respond_to do |format|
-      if @admin.update(admin_params)
-        format.html { redirect_to @admin, notice: 'Admin was successfully updated.' }
-        format.json { render :show, status: :ok, location: @admin }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @admin.errors, status: :unprocessable_entity }
-      end
+    if @admin.update(admin_params)
+      redirect_to @admin, notice: 'Admin was successfully updated.'
+    else
+      render :edit
     end
   end
 
-  # DELETE /admins/1 or /admins/1.json
   def destroy
     @admin.destroy
+    redirect_to admins_path, notice: 'Admin was successfully deleted.'
+  end
 
-    respond_to do |format|
-      format.html { redirect_to admins_path, status: :see_other, notice: 'Admin was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+  def dashboard
+    @admin = current_user
+    @artisans = @admin.artisans
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_admin
-    @admin = Admin.find(params[:id])
+  # Redirects unless the current user is a super_admin
+  def require_super_admin
+    return if session[:role] == 'super_admin'
+
+    redirect_to root_path, alert: 'You are not authorized to perform this action.'
   end
 
-  # Only allow a list of trusted parameters through.
+  # Allows editing for super_admins or the admin themselves
+  def authorize_admin_edit!
+    return if session[:role] == 'super_admin' || current_user == @admin
+
+    redirect_to root_path, alert: 'You are not authorized to perform this action.'
+  end
+
+  def set_admin
+    @admin = Admin.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admins_path, alert: 'Admin not found.'
+  end
+
   def admin_params
-    params.require(:admin).permit(:email, :password_digest)
+    params.require(:admin).permit(:email, :password, :password_confirmation)
   end
 end
