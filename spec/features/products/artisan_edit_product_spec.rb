@@ -9,7 +9,7 @@ RSpec.describe 'ArtisanEditsProduct', type: :feature do
     login_as(artisan)
   end
 
-  scenario 'Artisan visits the edit product page' do
+  scenario 'Artisan visits the product show page' do
     visit edit_artisan_product_path(artisan, product)
     expect(page).to have_content('Edit Product')
     expect(page).to have_field('Product Name', with: product.name)
