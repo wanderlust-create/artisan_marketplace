@@ -1,28 +1,36 @@
-<h1>Artisans for <%= @admin.email %></h1>
+<h1>Your Artisans</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Store Name</th>
-      <th>Email</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @artisans.each do |artisan| %>
+<div class="actions" style="margin-bottom: 1rem;">
+  <%= link_to 'Add New Artisan' , new_admin_artisan_path(@admin), class: 'btn btn-primary' %>
+</div>
+
+<% if @artisans.any? %>
+  <table id="artisan-list">
+    <thead>
       <tr>
-        <td>
-          <%= artisan.store_name %>
-        </td>
-        <td>
-          <%= artisan.email %>
-        </td>
-        <td>
-          <%= link_to 'Edit', edit_admin_artisan_path(@admin, artisan), confirm: 'Are you sure?' %>
-        </td>
+        <th>Store Name</th>
+        <th>Email</th>
+        <th>Actions</th>
       </tr>
-      <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @artisans.each do |artisan| %>
+        <tr>
+          <td>
+            <%= artisan.store_name %>
+          </td>
+          <td>
+            <%= artisan.email %>
+          </td>
+          <td>
+            <%= link_to "Show #{artisan.store_name}" , artisan_path(artisan.id), class: 'btn btn-secondary' %>
+          </td>
+        </tr>
+        <% end %>
+    </tbody>
+  </table>
+  <% else %>
+    <p>You currently have no artisans. Start by creating a new artisan.</p>
+    <% end %>
 
-<%= link_to 'Create New Artisan', new_admin_artisan_path(@admin) %>
+      <%= link_to 'Back to Dashboard' , dashboard_admin_path(@admin), class: 'btn btn-primary' %>

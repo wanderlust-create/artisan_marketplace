@@ -2,21 +2,21 @@ class ProductsController < ApplicationController
   before_action :set_artisan, only: %i[index show new create edit update destroy]
 
   def index
-    @products = Product.all
+    @products = @artisan.products.all
   end
 
   def show
-    @product = Product.find(params[:id])
+    @product = @artisan.products.find(params[:id])
   end
 
   def new
-    @product = @artisan.products.new
+    @product = @artisan.products.build
   end
 
   def create
-    @product = @artisan.products.new(product_params)
+    @product = @artisan.products.build(product_params)
     if @product.save
-      redirect_to artisan_path(@artisan), notice: 'Product was successfully created.'
+      redirect_to dashboard_artisan_path(@artisan), notice: 'Product was successfully created.'
     else
       render :new
     end
@@ -39,7 +39,7 @@ class ProductsController < ApplicationController
   def destroy
     @product = Product.find(params[:id])
     @product.destroy
-    redirect_to artisan_path(@artisan), notice: 'Product was successfully deleted.'
+    redirect_to dashboard_artisan_path(@artisan), notice: 'Product was successfully deleted.'
   end
 
   private

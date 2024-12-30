@@ -1,0 +1,17 @@
+<h1>Admin Dashboard</h1>
+<p>Welcome, <%= @admin.email %>!</p>
+
+<h2>Your Artisans</h2>
+<% if @artisans.any? %>
+  <ul>
+    <% @artisans.each do |artisan| %>
+      <li>
+        <%= link_to artisan.store_name, artisan_path(artisan.id) %>
+      </li>
+      <% end %>
+  </ul>
+  <% else %>
+    <p>No artisans found.</p>
+    <% end %>
+      <%= link_to 'View All Artisans' , admin_artisans_path(@admin), class: 'btn btn-primary' %>
+        <%= link_to 'Add New Artisan' , new_admin_artisan_path(@admin), class: 'btn btn-primary' %>

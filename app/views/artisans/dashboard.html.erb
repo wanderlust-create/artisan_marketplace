@@ -1,0 +1,17 @@
+<h1>Artisan Dashboard</h1>
+<p>Welcome, <%= @artisan.store_name %>!</p>
+
+<h2>Your Products</h2>
+<% if @products.any? %>
+  <ul>
+    <% @products.each do |product| %>
+      <li>
+        <%= link_to product.name, artisan_product_path(@artisan, product) %>
+      </li>
+      <% end %>
+  </ul>
+  <% else %>
+    <p>No products found.</p>
+    <% end %>
+      <%= link_to 'Manage Products' , artisan_products_path(@artisan), class: 'btn btn-primary' %>
+      <%= link_to 'Add New Product' , new_artisan_product_path(@artisan), class: 'btn btn-primary' %>

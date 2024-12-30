@@ -2,7 +2,7 @@
   <%= notice %>
 </p>
 
-<h1>All Products</h1>
+<h1>Your Products</h1>
 
 <div id="products">
   <% @products.each do |product| %>
@@ -13,4 +13,5 @@
       <% end %>
 </div>
 
-<%= link_to 'Back to Artisan Homepage', artisan_path(@artisan), class: 'btn btn-primary' %>
+<%= link_to 'Add New Product' , new_artisan_product_path(@artisan), class: 'btn btn-primary' %>
+<%= link_to 'Back to Dashboard', dashboard_artisan_path(@artisan), class: 'btn btn-primary' %>

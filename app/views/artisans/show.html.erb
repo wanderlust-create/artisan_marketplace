@@ -1,36 +1,30 @@
-<h2>Your Products</h2>
-<%= link_to 'Create New Product', new_artisan_product_path(@artisan), class: 'btn btn-primary' %>
+<h1>Artisan Details</h1>
 
-  <% if @artisan.products.any? %>
-    <table>
-      <thead>
-        <tr>
-          <th>Product Name</th>
-          <th>Price</th>
-          <th>Quantity In Stock</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @artisan.products.each do |product| %>
-          <tr>
-            <td>
-              <%= product.name %>
-            </td>
-            <td>
-              <%= number_to_currency(product.price, unit: '$' ) %>
-            </td>
-            <td>
-              <%= product.stock %>
-            </td>
-            <td>
-              <%= link_to 'Edit Product', edit_artisan_product_path(@artisan, product), class: 'btn btn-secondary' %> |
-                <%= link_to "Delete #{product.name}", artisan_product_path(@artisan, product), 
-                    data: { turbo_method: :delete, 
-                            turbo_confirm: "Are you sure you want to delete your #{product.name}?" } %>
-            </td>
-          </tr>
-          <% end %>
-      </tbody>
-    </table>
-      <p>No products yet. Start by <%= link_to 'creating a new product', new_artisan_product_path(@artisan) %>.</p>
-      <% end %>
+<p>
+  <strong>Store Name:</strong>
+  <%= @artisan.store_name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @artisan.email %>
+</p>
+
+<div class="timestamps" style="font-size: 0.85rem; color: #6c757d; margin-top: 1rem;">
+  <p>
+    <em>Created on:</em>
+    <%= @artisan.created_at.strftime('%B %d, %Y at %I:%M %p') %>
+  </p>
+  <p>
+    <em>Last updated:</em>
+    <%= @artisan.updated_at.strftime('%B %d, %Y at %I:%M %p') %>
+  </p>
+</div>
+
+<div class="actions" style="margin-top: 1.5rem;">
+  <%= link_to 'Edit Artisan Data' , edit_admin_artisan_path(@admin, @artisan), class: 'btn btn-secondary' %> |
+    <%= link_to "Delete Data for #{@artisan.store_name}" , admin_artisan_path(@admin, @artisan), data: { turbo_method:
+      :delete, turbo_confirm: "Are you sure you want to delete all data for #{@artisan.store_name}?" }, class: 'btn btn-danger' %>
+</div>
+
+<%= link_to 'Back to Dashboard' , dashboard_admin_path(@admin), class: 'btn btn-primary' %>
