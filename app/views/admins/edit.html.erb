@@ -1,10 +1,43 @@
-<h1>Editing admin</h1>
+<h1>Edit Your Account</h1>
 
-<%= render "form", admin: @admin %>
+<% if @admin.errors.any? %>
+  <div class="error-messages">
+    <h2>There was an error updating your account:</h2>
+    <ul>
+      <% @admin.errors.full_messages.each do |message| %>
+        <li>
+          <%= message %>
+        </li>
+        <% end %>
+    </ul>
+  </div>
+  <% end %>
 
-<br>
+    <%= form_with(model: @admin, url: admin_path(@admin), method: :patch) do |form| %>
+      <div>
+        <%= form.label :email, "Email" %>
+          <%= form.email_field :email, required: true %>
+      </div>
 
-<div>
-  <%= link_to "Show this admin", @admin %> |
-  <%= link_to "Back to admins", admins_path %>
-</div>
+      <div>
+        <%= form.label :password, "New Password (leave blank to keep current password)" %>
+          <%= form.password_field :password %>
+            <small>(leave blank to keep current password)</small>
+      </div>
+
+      <div>
+        <%= form.label :password_confirmation, "Confirm Password" %>
+          <%= form.password_field :password_confirmation %>
+      </div>
+
+      <% if current_user.super_admin? %>
+        <div>
+          <%= form.select :role, Admin.roles.keys %>
+            <%= form.select :role, Admin.roles.keys, prompt: 'Select a role' %>
+        </div>
+        <% end %>
+
+          <div>
+            <%= form.submit "Update Account" %>
+          </div>
+          <% end %>
