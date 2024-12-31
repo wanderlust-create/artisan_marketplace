@@ -1,15 +1,23 @@
 <h1>Login</h1>
 
-<%= form_with url: auth_login_path, method: :post do |form| %>
+<%= form_with(url: auth_login_path, local: true) do |form| %>
   <div>
-    <%= form.label :email %>
-      <%= form.text_field :email %>
+    <%= form.label :email, "Email" %>
+      <%= form.email_field :email, required: true, autofocus: true, placeholder: "Enter your email" %>
   </div>
+
   <div>
-    <%= form.label :password %>
-      <%= form.password_field :password %>
+    <%= form.label :password, "Password" %>
+      <%= form.password_field :password, required: true, placeholder: "Enter your password" %>
   </div>
+
   <div>
-    <%= form.submit "Login" %>
+    <%= form.submit "Login" , class: "btn btn-primary" %>
   </div>
   <% end %>
+
+    <% if flash[:alert] %>
+      <p style="color: red">
+        <%= flash[:alert] %>
+      </p>
+      <% end %>
