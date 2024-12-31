@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   end
 
   # Admins and their related artisans
-  resources :admins, only: %i[new show index create update] do
+  resources :admins, only: %i[new show index create edit update] do
     member do
       get 'dashboard', to: 'admins#dashboard'
     end
