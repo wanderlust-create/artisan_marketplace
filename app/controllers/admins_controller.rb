@@ -59,7 +59,7 @@ class AdminsController < ApplicationController
   def require_super_admin
     return if session[:role] == 'super_admin'
 
-    redirect_to root_path, alert: 'You are not authorized to edit an admin role.'
+    redirect_to root_path, alert: 'You are not authorized to perform this action.'
   end
 
   def authorize_admin_edit!
