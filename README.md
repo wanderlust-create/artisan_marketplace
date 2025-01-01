@@ -79,7 +79,11 @@ This project serves as a marketplace for artisans and administrators to manage u
 
 ## 🗟 Schema <a name="schema"></a>
 
-### Simplified Schema:
+### Visual Representation:
+
+![Database Schema](https://github.com/wanderlust-create/artisan_marketplace/blob/main/app/assets/images/artisan_marketplace_schema.png?raw=true)
+
+### Detailed Schema:
 
 - **Admins**:
   - Attributes: `id`, `email`, `password_digest`, `role` (enum: 0 = regular, 1 = super_admin), `created_at`, `updated_at`.
@@ -105,11 +109,6 @@ This project serves as a marketplace for artisans and administrators to manage u
 - **Transactions**:
   - Attributes: `id`, `invoice_id` (FK to Invoices), `credit_card_number`, `credit_card_expiration_date`, `status` (enum: 0 = approved, 1 = declined, 2 = refunded), `created_at`, `updated_at`.
 
-### Visual Representation:
-
-![Database Schema](https://github.com/wanderlust-create/artisan_marketplace/blob/main/app/assets/images/artisan_marketplace_schema.png?raw=true)
-
-More detailed schema design can be added in future updates.
 
 ---
 
