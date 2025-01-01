@@ -1,14 +1,16 @@
 class AdminsController < ApplicationController
-  before_action :set_admin, only: %i[show edit update destroy] # Fetch the admin after authorization
-  before_action :require_admin, only: %i[edit update] # Ensure user is logged in first
-  before_action :require_super_admin, only: %i[new create destroy] # Role-based access for super_admin
-  before_action :authorize_admin_edit!, only: %i[edit update] # Permission for editing
+  before_action :set_admin, only: %i[show edit update destroy] # Fetch the admin
+  before_action :require_admin, only: %i[edit update destroy show] # Ensure user is logged in
+  before_action :require_super_admin, only: %i[new create destroy] # Restrict sensitive actions to super_admin
+  before_action :authorize_admin_edit!, only: %i[edit update] # Restrict edit/update access
 
   def index
     @admins = Admin.page(params[:page]).per(10) # Paginate for scalability
   end
 
-  def show; end
+  def show
+    # Render the admin details
+  end
 
   def new
     @admin = Admin.new
