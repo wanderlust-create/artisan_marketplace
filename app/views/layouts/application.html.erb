@@ -12,6 +12,25 @@
 </head>
 
 <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <%= link_to 'Home' , root_path %>
+          </li>
+          <% if current_user %>
+            <li>
+              <%= link_to 'Logout' , auth_logout_path, method: :delete, data: { confirm: 'Are you sure you want to log out?'
+                } %>
+            </li>
+            <% else %>
+              <li>
+                <%= link_to 'Login' , auth_login_path %>
+              </li>
+              <% end %>
+        </ul>
+      </nav>
+    </header>
   <% flash.each do |key, message| %>
     <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %>">
       <%= message %>
