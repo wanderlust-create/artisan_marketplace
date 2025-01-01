@@ -20,8 +20,10 @@
         </li>
         <% if current_user %>
           <li>
-            <%= link_to 'Logout' , auth_logout_path, method: :delete, data: { confirm: 'Are you sure you want to log out?'
-              } %>
+            <li>
+              <%= link_to 'Logout' , auth_logout_path, data: { turbo_method: :delete,
+                turbo_confirm: 'Are you sure you want to log out?' }, class: 'btn btn-danger' %>
+            </li>
           </li>
           <% else %>
             <li>
