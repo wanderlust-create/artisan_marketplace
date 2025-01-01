@@ -107,7 +107,7 @@ This project serves as a marketplace for artisans and administrators to manage u
 
 ### Visual Representation:
 
-![Database Schema](https://user-images.githubusercontent.com/67713820/399539746-44bd4a4d-8406-41c0-8ef9-17f7563f32f9.png)
+![Database Schema](https://github.com/wanderlust-create/artisan_marketplace/blob/main/app/assets/images/artisan_marketplace_schema.png?raw=true)
 
 More detailed schema design can be added in future updates.
 
