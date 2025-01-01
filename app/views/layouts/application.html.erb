@@ -12,6 +12,27 @@
 </head>
 
 <body>
+  <header>
+    <nav>
+      <ul>
+        <li>
+          <%= link_to 'Home' , dashboard_path_for(current_user) %>
+        </li>
+        <% if current_user %>
+          <li>
+            <li>
+              <%= link_to 'Logout' , auth_logout_path, data: { turbo_method: :delete,
+                turbo_confirm: 'Are you sure you want to log out?' }, class: 'btn btn-danger' %>
+            </li>
+          </li>
+          <% else %>
+            <li>
+              <%= link_to 'Login' , auth_login_path %>
+            </li>
+            <% end %>
+      </ul>
+    </nav>
+  </header>
   <% flash.each do |key, message| %>
     <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %>">
       <%= message %>
