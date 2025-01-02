@@ -97,3 +97,7 @@ Lint/Syntax:
 
 AllCops:
   SuggestExtensions: false
+
+RSpec/IndexedLet:
+  Exclude:
+    - "spec/**/*"
