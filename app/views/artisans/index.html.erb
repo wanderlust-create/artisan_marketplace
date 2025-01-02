@@ -33,4 +33,4 @@
     <p>You currently have no artisans. Start by creating a new artisan.</p>
     <% end %>
 
-      <%= link_to 'Back to Dashboard' , dashboard_admin_path(@admin), class: 'btn btn-primary' %>
+      <%= link_to 'Back to Dashboard' , dashboard_path_for(current_user) %>

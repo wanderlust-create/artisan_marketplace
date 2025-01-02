@@ -27,4 +27,4 @@
       :delete, turbo_confirm: "Are you sure you want to delete all data for #{@artisan.store_name}?" }, class: 'btn btn-danger' %>
 </div>
 
-<%= link_to 'Back to Dashboard' , dashboard_admin_path(@admin), class: 'btn btn-primary' %>
+<%= link_to 'Back to Dashboard' , dashboard_path_for(current_user) %>
