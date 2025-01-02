@@ -25,8 +25,9 @@ RSpec.describe 'View All Artisans', type: :feature do
       end
 
       within("#artisan-#{artisan2.id}") do
-        expect(page).to have_link('Edit', href: edit_admin_artisan_path(admin, artisan2))
-        expect(page).to have_link('Delete', href: admin_artisan_path(admin, artisan2))
+        expect(page).to have_link("Show #{artisan2.store_name}", artisan_path(artisan2))
+        expect(page).to have_link("Edit #{artisan2.store_name}", edit_admin_artisan_path(admin, artisan2))
+   
       end
     end
   end
