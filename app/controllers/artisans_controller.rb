@@ -1,6 +1,6 @@
 class ArtisansController < ApplicationController
   before_action :set_admin, only: %i[index show new create edit update destroy]
-  before_action :set_artisan, only: [:show]
+  before_action :set_artisan, only: %i[show update]
 
   def index
     @artisans = @admin.artisans
@@ -29,9 +29,9 @@ class ArtisansController < ApplicationController
   end
 
   def update
-    @artisan = @admin.artisans.find(params[:id])
     if @artisan.update(artisan_params)
-      redirect_to artisan_path(@artisan), notice: 'Artisan was successfully updated.'
+      handle_status_change
+      redirect_to artisan_path(@artisan), notice: flash[:notice]
     else
       flash.now[:alert] = 'There was an error updating the artisan.'
       render :edit
@@ -72,6 +72,16 @@ class ArtisansController < ApplicationController
   end
 
   def artisan_params
-    params.require(:artisan).permit(:store_name, :email, :password, :password_confirmation)
+    params.require(:artisan).permit(:store_name, :email, :password, :password_confirmation, :active)
+  end
+
+  def handle_status_change
+    flash[:notice] = if artisan_params[:active] == 'false'
+                       'Artisan has been successfully deactivated.'
+                     elsif artisan_params[:active] == 'true'
+                       'Artisan has been successfully reactivated.'
+                     else
+                       'Artisan details have been successfully updated.'
+                     end
   end
 end
