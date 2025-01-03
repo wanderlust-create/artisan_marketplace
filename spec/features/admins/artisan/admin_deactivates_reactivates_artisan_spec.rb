@@ -17,8 +17,7 @@ RSpec.describe 'Admin Deactivates/Reactivates an Artisan', type: :feature do
 
     it 'successfully deactivates the artisan account' do
       # Toggle to deactivate
-      select 'Inactive', from: 'Account Status'
-      click_button 'Update Artisan'
+      toggle_account_status('Inactive')
 
       expect(page).to have_content('Artisan has been successfully deactivated.')
       expect(current_path).to eq(artisan_path(artisan))
@@ -29,8 +28,7 @@ RSpec.describe 'Admin Deactivates/Reactivates an Artisan', type: :feature do
       artisan.update(active: false)
 
       # Toggle to reactivate
-      select 'Active', from: 'Account Status'
-      click_button 'Update Artisan'
+      toggle_account_status('Active')
 
       expect(page).to have_content('Artisan has been successfully reactivated.')
       expect(current_path).to eq(artisan_path(artisan))

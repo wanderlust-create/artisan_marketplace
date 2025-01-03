@@ -51,6 +51,9 @@ RSpec.configure do |config|
   # Include SessionHelpers for feature specs
   config.include SessionHelpers, type: :feature
 
+  # Include FeatureHelpers for feature specs
+  config.include FeatureHelpers, type: :feature
+
   # Set the fixture path
   config.fixture_path = Rails.root.join('spec/fixtures').to_s
 
