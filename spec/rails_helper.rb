@@ -7,8 +7,6 @@ SimpleCov.start 'rails' do
   add_filter '/bin/'
   add_filter '/db/'
   add_filter '/spec/'
-  # Uncomment to enforce minimum coverage percentage
-  # SimpleCov.minimum_coverage 90
 end
 
 SimpleCov.at_exit do
@@ -17,8 +15,8 @@ SimpleCov.at_exit do
 end
 
 # Configure Capybara drivers
-Capybara.default_driver = :rack_test # Fast, non-JS tests
-Capybara.javascript_driver = :selenium_chrome # Use for JS-enabled tests
+Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :selenium_chrome
 
 # Ensure the Rails environment is set to test
 ENV['RAILS_ENV'] ||= 'test'
@@ -30,6 +28,9 @@ Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 # Require RSpec and Rails
 require 'rspec/rails'
+
+# Add Rails::Controller::Testing
+Rails::Controller::Testing.install
 
 # Maintain test schema and handle pending migrations
 begin
@@ -43,9 +44,10 @@ end
 RSpec.configure do |config|
   # Configure system tests to use appropriate drivers
   config.before(:each, type: :system) do
-    driven_by :rack_test # Use :selenium for JavaScript-enabled tests
+    driven_by :rack_test
   end
-  # add routes helpers
+
+  # Include route helpers
   config.include Rails.application.routes.url_helpers
 
   # Include SessionHelpers for feature specs
