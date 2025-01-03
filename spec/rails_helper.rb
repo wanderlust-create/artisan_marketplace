@@ -17,6 +17,8 @@ end
 # Configure Capybara drivers
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :selenium_chrome
+Capybara.default_max_wait_time = 100 # Default is 2 seconds
+
 
 # Ensure the Rails environment is set to test
 ENV['RAILS_ENV'] ||= 'test'
