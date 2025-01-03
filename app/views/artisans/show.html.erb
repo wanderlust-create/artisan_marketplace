@@ -10,21 +10,42 @@
   <%= @artisan.email %>
 </p>
 
-<div class="timestamps" style="font-size: 0.85rem; color: #6c757d; margin-top: 1rem;">
-  <p>
-    <em>Created on:</em>
-    <%= @artisan.created_at.strftime('%B %d, %Y at %I:%M %p') %>
-  </p>
-  <p>
-    <em>Last updated:</em>
-    <%= @artisan.updated_at.strftime('%B %d, %Y at %I:%M %p') %>
-  </p>
-</div>
+<p>
+  <strong>Account Status:</strong>
+  <% if @artisan.active %>
+    <span style="color: green; font-weight: bold;">Active</span>
+    <% else %>
+      <span style="color: red; font-weight: bold;">Inactive</span>
+      <% end %>
+</p>
+
+<% if current_user.is_a?(Admin) %>
+  <div class="timestamps" style="font-size: 0.85rem; color: #6c757d; margin-top: 1rem;">
+    <p>
+      <em>Created on:</em>
+      <%= @artisan.created_at.strftime('%B %d, %Y at %I:%M %p') %>
+    </p>
+    <p>
+      <em>Last updated:</em>
+      <%= @artisan.updated_at.strftime('%B %d, %Y at %I:%M %p') %>
+    </p>
+  </div>
+  <% end %>
 
 <div class="actions" style="margin-top: 1.5rem;">
-  <%= link_to 'Edit Artisan Data' , edit_admin_artisan_path(@admin, @artisan), class: 'btn btn-secondary' %> |
-    <%= link_to "Delete Data for #{@artisan.store_name}" , admin_artisan_path(@admin, @artisan), data: { turbo_method:
-      :delete, turbo_confirm: "Are you sure you want to delete all data for #{@artisan.store_name}?" }, class: 'btn btn-danger' %>
+  <% if can_edit_artisan? %>
+    <%= link_to 'Edit Artisan Data' , edit_admin_artisan_path(@admin, @artisan), class: 'btn btn-secondary' %>
+      <% end %>
+        <% if can_delete_artisan? %>
+          <%= link_to "Delete Data for #{@artisan.store_name}" , admin_artisan_path(@admin, @artisan), data: {
+            turbo_method: :delete, turbo_confirm: "Are you sure you want to delete all data for #{@artisan.store_name}?"
+            }, class: 'btn btn-danger' %>
+            <% end %>
 </div>
 
-<%= link_to 'Back to Dashboard' , dashboard_admin_path(@admin), class: 'btn btn-primary' %>
+
+    <div style="margin-top: 1rem;">
+      <%= link_to 'View Artisan Products' , artisan_products_path(@artisan), class: 'btn btn-primary' %>
+    </div>
+
+    <%= link_to 'Back to Dashboard' , dashboard_path_for(current_user), style: 'display: block; margin-top: 1rem;' %>
