@@ -28,7 +28,14 @@ class SessionsController < ApplicationController
 
   def log_in_user(user)
     session[:user_email] = user.email
-    session[:role] = user.is_a?(Admin) ? 'admin' : 'artisan' # Store role for differentiation
+
+    session[:role] = if user.is_a?(Admin)
+                       user.super_admin? ? 'super_admin' : 'admin' # Differentiate between admin and super_admin
+                     elsif user.is_a?(Artisan)
+                       'artisan'
+                     else
+                       'guest' # Optional fallback for unexpected cases
+                     end
   end
 
   def dashboard_path_for(user)
