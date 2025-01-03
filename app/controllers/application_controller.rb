@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   def current_user
-    @current_user ||= Admin.find_by(id: session[:user_id]) || Artisan.find_by(id: session[:user_id])
+    @current_user ||= Admin.find_by(email: session[:user_email]) || Artisan.find_by(email: session[:user_email])
   end
 
   def dashboard_path_for(user)
