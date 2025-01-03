@@ -1,5 +1,20 @@
 <h1>Create a New Artisan for <%= @admin.email %>
 </h1>
+<% if flash[:alert] %>
+  <div class="alert alert-danger">
+    <p>
+      <%= flash[:alert] %>
+    </p>
+    <% if flash[:errors] %>
+      <ul>
+        <% flash[:errors].split(', ').each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
+
 
 <%= form_with model: [@admin, @artisan], local: true do |form| %>
   <div>

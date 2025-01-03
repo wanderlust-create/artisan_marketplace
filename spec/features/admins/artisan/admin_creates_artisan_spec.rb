@@ -2,61 +2,115 @@ require 'rails_helper'
 
 RSpec.feature 'AdminCreatesArtisan', type: :feature do
   let(:admin) { FactoryBot.create(:admin, email: 'admin@example.com', password: 'password') }
+  let(:unauthorized_admin) { FactoryBot.create(:admin, email: 'otheradmin@example.com', password: 'password') }
 
   before do
-    login_as(admin) # Simulate admin login
+    login_as(admin)
   end
 
-  scenario 'Admin navigates to the new artisan page from the index' do # rubocop:disable RSpec/MultipleExpectations
-    # Step 1: Visit the artisan index page
+  after do
+    logout
+  end
+
+  scenario 'Admin navigates to the new artisan page from the artisan index' do # rubocop:disable RSpec/MultipleExpectations
     visit admin_artisans_path(admin)
     expect(page).to have_content('Your Artisans')
     expect(page).to have_link('Add New Artisan')
 
-    # Step 2: Click the link and verify navigation
     click_link 'Add New Artisan'
-    expect(page).to have_current_path(new_admin_artisan_path(admin)) # URI expectation
+    expect(page).to have_current_path(new_admin_artisan_path(admin))
     expect(page).to have_content('Create a New Artisan')
     expect(page).to have_field('Store Name')
     expect(page).to have_field('Email')
   end
 
-  scenario 'Admin fills in the form and creates a new artisan' do
-    # Step 1: Navigate to the new artisan form
+  scenario 'Admin successfully creates a new artisan' do
     visit new_admin_artisan_path(admin)
 
-    # Step 2: Fill in the form
-    fill_in 'Store Name', with: 'Artisan Wonders'
-    fill_in 'Email', with: 'artisan@example.com'
-    fill_in 'Password', with: 'securepassword'
-    fill_in 'Confirm Password', with: 'securepassword'
+    fill_in_artisan_form(
+      store_name: 'new_artisan1',
+      email: 'artisan1@example.com',
+      password: 'securepassword',
+      password_confirmation: 'securepassword'
+    )
 
-    # Step 3: Submit the form
     click_button 'Create Artisan'
 
-    # Step 4: Verify redirection and success message
-    expect(page).to have_current_path(dashboard_admin_path(admin)) # URI expectation
+    expect(page).to have_current_path(dashboard_admin_path(admin))
     expect(page).to have_content('Artisan was successfully created.')
-    expect(page).to have_content('Artisan Wonders')
+    expect(page).to have_content('new_artisan1')
   end
 
-  scenario 'Admin sees the newly created artisan in the list' do
-    # Step 1: Create the artisan
+  scenario 'Admin sees all created artisans in the artisan list' do # rubocop:disable RSpec/ExampleLength
+    # Create first artisan
     visit new_admin_artisan_path(admin)
-    fill_in 'Store Name', with: 'Artisan Wonders'
-    fill_in 'Email', with: 'artisan@example.com'
-    fill_in 'Password', with: 'securepassword'
-    fill_in 'Confirm Password', with: 'securepassword'
+    fill_in_artisan_form(
+      store_name: 'new_artisan1',
+      email: 'artisan1@example.com',
+      password: 'securepassword',
+      password_confirmation: 'securepassword'
+    )
     click_button 'Create Artisan'
 
-    # Step 2: Verify redirection to the dashboard
-    expect(page).to have_current_path(dashboard_admin_path(admin))
+    # Create second artisan
+    visit new_admin_artisan_path(admin)
+    fill_in_artisan_form(
+      store_name: 'new_artisan2',
+      email: 'artisan2@example.com',
+      password: 'securepassword',
+      password_confirmation: 'securepassword'
+    )
+    click_button 'Create Artisan'
 
-    # Step 3: Navigate to the artisan index page
+    # Verify both artisans appear on the index page
     visit admin_artisans_path(admin)
+    expect(page).to have_content('new_artisan1')
+    expect(page).to have_content('artisan1@example.com')
+    expect(page).to have_content('new_artisan2')
+    expect(page).to have_content('artisan2@example.com')
+  end
 
-    # Step 4: Verify the artisan appears in the list
-    expect(page).to have_content('Artisan Wonders')
-    expect(page).to have_content('artisan@example.com')
+  scenario 'Admin cannot create an artisan with invalid data' do
+    visit new_admin_artisan_path(admin)
+
+    fill_in_artisan_form(
+      store_name: '',
+      email: '',
+      password: '',
+      password_confirmation: ''
+    )
+    click_button 'Create Artisan'
+
+    expect(page).to have_content("Store name can't be blank")
+    expect(page).to have_content("Email can't be blank")
+    expect(page).to have_content("Password can't be blank")
+  end
+
+  scenario 'Unauthorized admin cannot access the new artisan page' do
+    logout
+    login_as(unauthorized_admin)
+
+    visit new_admin_artisan_path(admin)
+
+    expect(page).to have_current_path(dashboard_admin_path(unauthorized_admin))
+    expect(page).to have_content('You are not authorized to create an artisan.')
+  end
+
+  scenario 'Non-logged-in user is redirected to login page' do
+    logout
+
+    visit new_admin_artisan_path(admin)
+
+    expect(page).to have_current_path(auth_login_path)
+    expect(page).to have_content('You must be logged in to access this page.')
+  end
+
+  private
+
+  def fill_in_artisan_form(store_name:, email:, password:, password_confirmation:)
+    fill_in 'Store Name', with: store_name
+    fill_in 'Email', with: email
+    fill_in 'Password', with: password
+    fill_in 'Confirm Password', with: password_confirmation
   end
 end
