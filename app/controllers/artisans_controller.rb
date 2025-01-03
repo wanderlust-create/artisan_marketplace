@@ -1,7 +1,7 @@
 class ArtisansController < ApplicationController
   before_action :require_login
   before_action :set_admin, only: %i[index show new create edit update destroy]
-  before_action :set_artisan, only: %i[show update destroy]
+  before_action :set_artisan, only: %i[show edit update destroy]
   before_action :authorize_artisan_access, only: %i[edit update]
   helper_method :can_edit_artisan?, :can_view_artisan?, :can_delete_artisan?
 
@@ -59,12 +59,18 @@ class ArtisansController < ApplicationController
 
   def can_edit_artisan?
     # binding.pry
-    current_user == @artisan || current_user == @artisan.admin || current_user.super_admin?
+    if current_user.is_a?(Admin)
+      current_user.super_admin? || current_user.id == @artisan.admin_id
+    elsif current_user.is_a?(Artisan)
+      current_user == @artisan
+    else
+      false # Default to deny access
+    end
   end
 
   def can_delete_artisan?
     if current_user.is_a?(Admin)
-      current_user.super_admin? || current_user == @artisan.admin
+      current_user.super_admin? || current_user.id == @artisan.admin_id
     elsif current_user.is_a?(Artisan)
       false # Artisans should not have permission to delete
     else
