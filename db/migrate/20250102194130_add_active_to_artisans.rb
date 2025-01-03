@@ -3,4 +3,3 @@ class AddActiveToArtisans < ActiveRecord::Migration[7.0]
     add_column :artisans, :active, :boolean, default: true, null: false
   end
 end
-
