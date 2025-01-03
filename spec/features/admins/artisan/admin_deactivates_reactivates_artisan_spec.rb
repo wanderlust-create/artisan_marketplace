@@ -8,6 +8,7 @@ RSpec.describe 'Admin Deactivates/Reactivates an Artisan', type: :feature do
   context 'when logged in as the admin who owns the artisan' do
     before do
       login_as(admin)
+      visit edit_admin_artisan_path(admin, artisan)
     end
 
     after do
@@ -15,11 +16,8 @@ RSpec.describe 'Admin Deactivates/Reactivates an Artisan', type: :feature do
     end
 
     it 'successfully deactivates the artisan account' do
-      visit edit_admin_artisan_path(admin, artisan)
-
       # Toggle to deactivate
       select 'Inactive', from: 'Account Status'
-
       click_button 'Update Artisan'
 
       expect(page).to have_content('Artisan has been successfully deactivated.')
@@ -28,9 +26,7 @@ RSpec.describe 'Admin Deactivates/Reactivates an Artisan', type: :feature do
     end
 
     it 'successfully reactivates the artisan account' do
-      # Deactivate the artisan first
       artisan.update(active: false)
-      visit edit_admin_artisan_path(admin, artisan)
 
       # Toggle to reactivate
       select 'Active', from: 'Account Status'
@@ -52,21 +48,18 @@ RSpec.describe 'Admin Deactivates/Reactivates an Artisan', type: :feature do
     end
 
     it 'redirects with an unauthorized message' do
-      
-      binding.pry
-      
       visit edit_admin_artisan_path(admin, artisan)
 
       expect(page).to have_content('You are not authorized to perform this action.')
-      expect(current_path).to eq(root_path)
+      expect(current_path).to eq(artisan_path(artisan))
     end
   end
 
   context 'when not logged in' do
     it 'redirects to the login page' do
-      skip('This test is currently being skipped as it is not under focus')
       visit edit_admin_artisan_path(admin, artisan)
-      expect(page).to have_content('Please log in to access your account.')
+
+      expect(page).to have_content('You must be logged in to access this page.')
       expect(current_path).to eq(auth_login_path)
     end
   end
