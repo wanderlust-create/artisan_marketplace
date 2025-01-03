@@ -1,4 +1,5 @@
 class ArtisansController < ApplicationController
+  include ArtisanPermissions
   before_action :require_login
   before_action :set_admin, only: %i[index show new create edit update destroy dashboard]
   before_action :set_artisan, only: %i[show edit update destroy]
@@ -60,32 +61,6 @@ class ArtisansController < ApplicationController
   def dashboard
     @artisan = Artisan.find(params[:id])
     @products = @artisan.products
-  end
-
-  # Helper Methods
-
-  def can_edit_artisan?
-    if current_user.is_a?(Admin)
-      current_user.super_admin? || current_user.id == @artisan.admin_id
-    elsif current_user.is_a?(Artisan)
-      current_user == @artisan
-    else
-      false # Default to deny access
-    end
-  end
-
-  def can_delete_artisan?
-    if current_user.is_a?(Admin)
-      current_user.super_admin? || current_user.id == @artisan.admin_id
-    elsif current_user.is_a?(Artisan)
-      false # Artisans should not have permission to delete
-    else
-      false # Default to no permission
-    end
-  end
-
-  def can_view_artisan?
-    current_user.is_a?(Admin) || current_user == @artisan
   end
 
   private
