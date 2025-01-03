@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    session[:user_email] = nil
     session[:role] = nil
     redirect_to root_path, notice: 'You have logged out successfully.'
   end
@@ -27,8 +27,18 @@ class SessionsController < ApplicationController
   end
 
   def log_in_user(user)
-    session[:user_id] = user.id
-    session[:role] = user.role if user.is_a?(Admin) # Save role if user is an admin
+    session[:user_email] = user.email
+    session[:role] = user.is_a?(Admin) ? 'admin' : 'artisan' # Store role for differentiation
+  end
+
+  def dashboard_path_for(user)
+    if user.is_a?(Admin)
+      dashboard_admin_path(user.id)
+    elsif user.is_a?(Artisan)
+      dashboard_artisan_path(user.id)
+    else
+      root_path # Default fallback
+    end
   end
 
   def handle_login_failure
