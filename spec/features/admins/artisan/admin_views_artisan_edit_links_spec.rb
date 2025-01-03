@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe 'Admin Views Artisan', type: :feature do
   let(:super_admin) { create(:admin, role: 'super_admin') }
   let(:admin) { create(:admin) }
@@ -76,7 +78,7 @@ RSpec.describe 'Admin Views Artisan', type: :feature do
     it 'redirects to the login page' do
       visit artisan_path(artisan)
 
-      expect(page).to have_content('Please log in to access your account.')
+      expect(page).to have_content('You must be logged in to access this page.')
       expect(current_path).to eq(auth_login_path)
     end
   end
