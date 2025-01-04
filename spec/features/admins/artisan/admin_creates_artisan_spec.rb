@@ -93,7 +93,7 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
     visit new_admin_artisan_path(admin)
 
     expect(page).to have_current_path(dashboard_admin_path(unauthorized_admin))
-    expect(page).to have_content('You are not authorized to create an artisan.')
+    expect(page).to have_content('You do not have the necessary permissions to create this artisan.')
   end
 
   scenario 'Non-logged-in user is redirected to login page' do

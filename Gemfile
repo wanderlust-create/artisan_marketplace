@@ -97,4 +97,6 @@ group :test do
 
   # SimpleCov for test coverage reporting
   gem 'simplecov', require: false
+
+  gem 'rails-controller-testing'
 end

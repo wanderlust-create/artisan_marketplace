@@ -48,7 +48,7 @@ RSpec.describe 'Admin Deactivates/Reactivates an Artisan', type: :feature do
     it 'redirects with an unauthorized message' do
       visit edit_admin_artisan_path(admin, artisan)
 
-      expect(page).to have_content('You are not authorized to perform this action.')
+      expect(page).to have_content('You do not have the necessary permissions to edit this artisan.')
       expect(current_path).to eq(artisan_path(artisan))
     end
   end

@@ -1,12 +1,13 @@
 class ArtisansController < ApplicationController
   include ArtisanPermissions
   before_action :require_login
-  before_action :set_admin, only: %i[index show new create edit update destroy dashboard]
-  before_action :set_artisan, only: %i[show edit update destroy]
-  before_action :authorize_artisan_access, only: %i[edit update]
+  before_action :set_admin, only: %i[index show new create edit update destroy]
+  before_action :set_artisan, only: %i[show edit update destroy dashboard]
+  before_action :authorize_edit_artisan, only: %i[edit update]
   before_action :authorize_create_artisan, only: %i[new create]
+  before_action :authorize_delete_artisan, only: %i[destroy]
 
-  helper_method :can_edit_artisan?, :can_view_artisan?, :can_delete_artisan?
+  helper_method :can_manage_artisan?, :can_view_artisan?
 
   # Actions
 
@@ -52,9 +53,9 @@ class ArtisansController < ApplicationController
   def destroy
     store_name = @artisan.store_name
     if @artisan.destroy
-      redirect_to dashboard_admin_path(@admin), notice: "Artisan #{store_name} and all associated data were successfully deleted."
+      redirect_to dashboard_admin_path(@admin), notice: "#{store_name} and all associated data were successfully deleted."
     else
-      redirect_to dashboard_admin_path(@admin), alert: "Failed to delete Artisan #{store_name}."
+      redirect_to dashboard_admin_path(@admin), alert: "Failed to delete #{store_name}."
     end
   end
 
@@ -73,21 +74,23 @@ class ArtisansController < ApplicationController
     redirect_to auth_login_path, alert: 'You must be logged in to access this page.'
   end
 
-  def authorize_artisan_access
-    return if can_edit_artisan?
+  def authorize_edit_artisan
+    return if can_manage_artisan?(:edit)
 
-    flash[:alert] = 'You are not authorized to perform this action.'
+    flash[:alert] = 'You do not have the necessary permissions to edit this artisan.'
     redirect_to artisan_path(@artisan)
   end
 
   def authorize_create_artisan
-    return if can_create_artisan?
+    return if can_manage_artisan?(:create)
 
-    redirect_to dashboard_admin_path(current_user), alert: 'You are not authorized to create an artisan.'
+    redirect_to dashboard_admin_path(current_user), alert: 'You do not have the necessary permissions to create this artisan.'
   end
 
-  def can_create_artisan?
-    current_user.is_a?(Admin) && (current_user.super_admin? || current_user.id == @admin.id)
+  def authorize_delete_artisan
+    return if can_manage_artisan?(:delete)
+
+    redirect_to dashboard_admin_path(current_user), alert: 'You do not have the necessary permissions to delete this artisan.'
   end
 
   # Setter Methods
