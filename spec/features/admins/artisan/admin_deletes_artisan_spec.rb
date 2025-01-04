@@ -42,4 +42,3 @@ RSpec.feature 'AdminDeletesArtisan', type: :feature do
     expect(page).not_to have_link('Delete Data for Artisan Wonders')
   end
 end
-
