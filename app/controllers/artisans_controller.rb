@@ -116,12 +116,15 @@ class ArtisansController < ApplicationController
   end
 
   # Utility Methods
-
   def handle_status_change
-    flash[:notice] = if artisan_params[:active].present?
-                       "Artisan has been successfully #{artisan_params[:active] == 'true' ? 'reactivated' : 'deactivated'}."
-                     else
-                       'Artisan details have been successfully updated.'
-                     end
+    messages = []
+
+    if artisan_params[:active].present?
+      messages << "Artisan has been successfully #{artisan_params[:active] == 'true' ? 'reactivated' : 'deactivated'}."
+    end
+
+    messages << 'Artisan details have been successfully updated.' if artisan_params.except(:active).to_h.any? { |_key, value| value.present? }
+
+    flash[:notice] = messages.join(' ')
   end
 end
