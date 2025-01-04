@@ -15,7 +15,9 @@ module ArtisanPermissions
       else
         false
       end
-    when :create, :delete
+    when :create
+      current_user.is_a?(Admin) && (current_user.super_admin? || current_user == @admin)
+    when :delete
       current_user.is_a?(Admin) && (current_user.super_admin? || current_user.id == @artisan.admin_id)
     else
       false
