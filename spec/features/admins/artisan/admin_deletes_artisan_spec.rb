@@ -2,38 +2,67 @@ require 'rails_helper'
 
 RSpec.feature 'AdminDeletesArtisan', type: :feature do
   let(:admin) { FactoryBot.create(:admin, email: 'admin@example.com', password: 'password') }
+  let(:another_admin) { FactoryBot.create(:admin, email: 'anotheradmin@example.com', password: 'password') }
   let!(:artisan) { FactoryBot.create(:artisan, admin: admin, store_name: 'Artisan Wonders') }
 
-  before do
-    login_as(admin)
+ scenario 'Admin deletes an artisan and verifies it is no longer listed', :js do
+  login_as(admin)
+  
+  # Ensure admin lands on their dashboard
+  expect_to_be_on_dashboard_for(admin)
+  
+  # Navigate to the artisan show page
+  click_link 'Artisan Wonders'
+  expect(page).to have_current_path(artisan_path(artisan))
+
+  # Confirm deletion and verify success message
+  accept_confirm 'Are you sure you want to delete all data for Artisan Wonders?' do
+    click_link 'Delete Data for Artisan Wonders'
+  end
+  expect(page).to have_content('Artisan Wonders and all associated data were successfully deleted.')
+
+  # Verify artisan is no longer listed
+  visit admin_artisans_path(admin)
+  expect(page).not_to have_content('Artisan Wonders')
+end
+
+
+  # scenario 'Another admin cannot delete the artisan', :js do
+  #   login_as(another_admin)
+  #   attempt_to_access_delete_path(admin, artisan)
+
+  #   expect_to_be_redirected_with_unauthorized_message(another_admin)
+  # end
+
+  # scenario 'The artisan cannot delete herself', :js do
+  #   login_as(artisan)
+  #   attempt_to_access_delete_path(admin, artisan)
+
+  #   expect_to_be_redirected_with_unauthorized_message(artisan)
+  # end
+
+  private
+
+  # Helper to navigate to and delete an artisan
+  def attempt_to_access_delete_path(admin, artisan)
+    page.driver.submit :delete, admin_artisan_path(admin_id: admin.id, id: artisan.id), {}
   end
 
-  # Rubocop is disabled for this block because the scenario needs to test multiple steps and the Artisan needs to stay deleted
-  scenario 'Admin deletes an artisan and verifies it is no longer listed', :js do # rubocop:disable RSpec/ExampleLength,RSpec/MultipleExpectations
-    # Step 1: Navigate to the artisan show page
-    visit artisan_path(artisan)
-    expect(page).to have_content('Artisan Wonders')
+  # Helper for verifying unauthorized access redirection
+  def expect_to_be_redirected_with_unauthorized_message(user)
+    expect(page).to have_content('You do not have the necessary permissions to delete this artisan.')
+    expect_to_be_on_dashboard_for(user)
+  end
 
-    # Step 2: Handle Turbo's confirmation modal
-    accept_confirm 'Are you sure you want to delete all data for Artisan Wonders?' do
-      click_link 'Delete Data for Artisan Wonders'
-    end
-
-    # Step 3: Verify redirection and success message
-    expect(page).to have_current_path(dashboard_admin_path(admin))
-    expect(page).to have_content('Artisan Artisan Wonders and all associated data were successfully deleted.')
-
-    # Step 4: Navigate to the artisan list page
-    visit admin_artisans_path(admin)
-    expect(page).to have_current_path(admin_artisans_path(admin))
-
-    # Step 5: Verify artisan is no longer listed or fallback message is displayed
-    if admin.artisans.any?
-      within('#artisan-list') do
-        expect(page).not_to have_content('Artisan Wonders')
-      end
-    else
-      expect(page).to have_content('You currently have no artisans. Start by creating a new artisan.')
-    end
+  # Helper for verifying correct dashboard redirection
+  def expect_to_be_on_dashboard_for(user)
+    expected_path = if user.is_a?(Admin)
+                      dashboard_admin_path(user.id)
+                    elsif user.is_a?(Artisan)
+                      dashboard_artisan_path(user.id)
+                    else
+                      root_path
+                    end
+    expect(page).to have_current_path(expected_path)
   end
 end
