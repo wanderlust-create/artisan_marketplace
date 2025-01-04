@@ -45,7 +45,7 @@ RSpec.describe 'Admin Creates Admin', type: :feature do
     it 'cannot access the admin creation page' do
       visit new_admin_path
 
-      expect(page).to have_content('You are not authorized to perform this action.')
+      expect(page).to have_content('You do not have the necessary permissions to perform this action.')
       expect(current_path).to eq(root_path)
     end
   end
