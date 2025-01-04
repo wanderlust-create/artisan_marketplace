@@ -5,64 +5,41 @@ RSpec.feature 'AdminDeletesArtisan', type: :feature do
   let(:another_admin) { FactoryBot.create(:admin, email: 'anotheradmin@example.com', password: 'password') }
   let!(:artisan) { FactoryBot.create(:artisan, admin: admin, store_name: 'Artisan Wonders') }
 
- scenario 'Admin deletes an artisan and verifies it is no longer listed', :js do
-  login_as(admin)
-  
-  # Ensure admin lands on their dashboard
-  expect_to_be_on_dashboard_for(admin)
-  
-  # Navigate to the artisan show page
-  click_link 'Artisan Wonders'
-  expect(page).to have_current_path(artisan_path(artisan))
+  scenario 'Admin deletes an artisan and verifies it is no longer listed', :js do
+    login_as(admin)
+    expect_to_be_on_dashboard_for(admin)
 
-  # Confirm deletion and verify success message
-  accept_confirm 'Are you sure you want to delete all data for Artisan Wonders?' do
-    click_link 'Delete Data for Artisan Wonders'
-  end
-  expect(page).to have_content('Artisan Wonders and all associated data were successfully deleted.')
+    # Navigate to the artisan show page
+    click_link 'Artisan Wonders'
+    expect(page).to have_current_path(artisan_path(artisan))
 
-  # Verify artisan is no longer listed
-  visit admin_artisans_path(admin)
-  expect(page).not_to have_content('Artisan Wonders')
-end
+    # Confirm deletion and verify success message
+    accept_confirm 'Are you sure you want to delete all data for Artisan Wonders?' do
+      click_link 'Delete Data for Artisan Wonders'
+    end
+    expect(page).to have_content('Artisan Wonders and all associated data were successfully deleted.')
 
-
-  # scenario 'Another admin cannot delete the artisan', :js do
-  #   login_as(another_admin)
-  #   attempt_to_access_delete_path(admin, artisan)
-
-  #   expect_to_be_redirected_with_unauthorized_message(another_admin)
-  # end
-
-  # scenario 'The artisan cannot delete herself', :js do
-  #   login_as(artisan)
-  #   attempt_to_access_delete_path(admin, artisan)
-
-  #   expect_to_be_redirected_with_unauthorized_message(artisan)
-  # end
-
-  private
-
-  # Helper to navigate to and delete an artisan
-  def attempt_to_access_delete_path(admin, artisan)
-    page.driver.submit :delete, admin_artisan_path(admin_id: admin.id, id: artisan.id), {}
+    # Verify artisan is no longer listed
+    visit admin_artisans_path(admin)
+    expect(page).not_to have_content('Artisan Wonders')
   end
 
-  # Helper for verifying unauthorized access redirection
-  def expect_to_be_redirected_with_unauthorized_message(user)
-    expect(page).to have_content('You do not have the necessary permissions to delete this artisan.')
-    expect_to_be_on_dashboard_for(user)
+  scenario 'Another admin can view but cannot delete the artisan', :js do
+    login_as(another_admin)
+    expect_to_be_on_dashboard_for(another_admin)
+
+    # Navigate to the artisan page
+    visit artisan_path(artisan)
+    expect(page).not_to have_link('Delete Data for Artisan Wonders')
   end
 
-  # Helper for verifying correct dashboard redirection
-  def expect_to_be_on_dashboard_for(user)
-    expected_path = if user.is_a?(Admin)
-                      dashboard_admin_path(user.id)
-                    elsif user.is_a?(Artisan)
-                      dashboard_artisan_path(user.id)
-                    else
-                      root_path
-                    end
-    expect(page).to have_current_path(expected_path)
+  scenario 'The artisan can view but cannot delete herself', :js do
+    login_as(artisan)
+    expect_to_be_on_dashboard_for(artisan)
+
+    # Navigate to their own show page
+    visit artisan_path(artisan)
+    expect(page).not_to have_link('Delete Data for Artisan Wonders')
   end
 end
+
