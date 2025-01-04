@@ -61,7 +61,7 @@ class AdminsController < ApplicationController
   def require_super_admin
     return if session[:role] == 'super_admin'
 
-    redirect_to root_path, alert: 'You are not authorized to perform this action.'
+    redirect_to root_path, alert: 'You do not have the necessary permissions to perform this action.'
   end
 
   def authorize_admin_edit!
@@ -94,7 +94,7 @@ class AdminsController < ApplicationController
 
   def handle_unauthorized_role_change
     Rails.logger.warn "Unauthorized role change attempt by Admin ##{current_user.id}"
-    redirect_to edit_admin_path(@admin), alert: 'You are not authorized to change your role.'
+    redirect_to edit_admin_path(@admin), alert: 'You do not have the necessary permissions to change this role.'
   end
 
   def handle_update_failure

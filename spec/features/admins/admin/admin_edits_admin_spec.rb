@@ -24,7 +24,7 @@ RSpec.describe 'Admin Edits Their Own Account', type: :feature do
 
       page.driver.submit :patch, admin_path(admin), { admin: { role: 'super_admin' } }
 
-      expect(page).to have_content('You are not authorized to change your role.')
+      expect(page).to have_content('You do not have the necessary permissions to change this role.')
       expect(admin.reload.role).to eq('regular') # Role remains unchanged
     end
 
