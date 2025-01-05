@@ -15,9 +15,7 @@ class ArtisansController < ApplicationController
     @artisans = @admin.artisans
   end
 
-  def show
-    # @artisan is set via before_action
-  end
+  def show; end
 
   def new
     @artisan = @admin.artisans.build
@@ -35,9 +33,7 @@ class ArtisansController < ApplicationController
     end
   end
 
-  def edit
-    # @artisan is already set via before_action
-  end
+  def edit; end
 
   def update
     if @artisan.update(artisan_params)
@@ -58,13 +54,10 @@ class ArtisansController < ApplicationController
   end
 
   def dashboard
-    @artisan = Artisan.find(params[:id])
     @products = @artisan.products
   end
 
   private
-
-  # Authorization Methods
 
   def require_login
     return if current_user
@@ -72,27 +65,7 @@ class ArtisansController < ApplicationController
     redirect_to auth_login_path, alert: 'You must be logged in to access this page.'
   end
 
-  def authorize_edit_artisan
-    return if can_manage_artisan?(:edit)
-
-    flash[:alert] = 'You do not have the necessary permissions to edit this artisan.'
-    redirect_to artisan_path(@artisan)
-  end
-
-  def authorize_create_artisan
-    return if can_manage_artisan?(:create)
-
-    redirect_to dashboard_admin_path(current_user), alert: 'You do not have the necessary permissions to create this artisan.'
-  end
-
-  def authorize_delete_artisan
-    return if can_manage_artisan?(:delete)
-
-    redirect_to dashboard_admin_path(current_user), alert: 'You do not have the necessary permissions to delete this artisan.'
-  end
-
   # Setter Methods
-
   def set_admin
     if params[:admin_id]
       @admin = Admin.find(params[:admin_id])
@@ -108,7 +81,6 @@ class ArtisansController < ApplicationController
   end
 
   # Strong Parameters
-
   def artisan_params
     params.require(:artisan).permit(:store_name, :email, :password, :password_confirmation, :active)
   end
@@ -116,7 +88,6 @@ class ArtisansController < ApplicationController
   # Utility Methods
   def handle_status_change
     messages = []
-
     if artisan_params[:active].present?
       messages << "Artisan has been successfully #{artisan_params[:active] == 'true' ? 'reactivated' : 'deactivated'}."
     end
@@ -126,7 +97,6 @@ class ArtisansController < ApplicationController
     flash[:notice] = messages.join(' ')
   end
 
-  # Helper Methods
   def handle_post_update_actions
     handle_status_change
     @artisan.save
