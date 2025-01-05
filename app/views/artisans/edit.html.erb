@@ -21,7 +21,7 @@
       <%= form.password_field :password_confirmation %>
   </div>
 
-  <% if current_user.super_admin? || current_user==@artisan.admin %>
+  <% if current_user.is_a?(Admin) && (current_user.super_admin? || current_user == @artisan.admin) %>
     <div>
       <%= form.label :active, "Account Status" %>
         <%= form.select :active, [['Active', true], ['Inactive', false]], prompt: "Select Account Status" %>

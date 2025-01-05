@@ -1,5 +1,8 @@
 class ApplicationController < ActionController::Base
   def current_user
+    # Finds the current user by their email stored in the session.
+    # If new traits are added for Admin or Artisan models that affect login or session behavior,
+    # ensure the session and this method are updated accordingly.
     @current_user ||= Admin.find_by(email: session[:user_email]) || Artisan.find_by(email: session[:user_email])
   end
 
