@@ -18,6 +18,30 @@ module ArtisanPermissions
     end
   end
 
+  def can_view_artisan?
+    current_user.is_a?(Admin) || current_user == @artisan
+  end
+
+  # Authorization Methods
+  def authorize_edit_artisan
+    return if can_manage_artisan?(:edit)
+
+    flash[:alert] = 'You do not have the necessary permissions to edit this artisan.'
+    redirect_to artisan_path(@artisan)
+  end
+
+  def authorize_create_artisan
+    return if can_manage_artisan?(:create)
+
+    redirect_to dashboard_admin_path(current_user), alert: 'You do not have the necessary permissions to create this artisan.'
+  end
+
+  def authorize_delete_artisan
+    return if can_manage_artisan?(:delete)
+
+    redirect_to dashboard_admin_path(current_user), alert: 'You do not have the necessary permissions to delete this artisan.'
+  end
+
   private
 
   def can_edit_artisan?
@@ -40,9 +64,5 @@ module ArtisanPermissions
     return false unless @artisan
 
     current_user.is_a?(Admin) && (current_user.super_admin? || current_user.id == @artisan.admin_id)
-  end
-
-  def can_view_artisan?
-    current_user.is_a?(Admin) || current_user == @artisan
   end
 end
