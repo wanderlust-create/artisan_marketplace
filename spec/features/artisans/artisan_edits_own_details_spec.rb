@@ -37,7 +37,7 @@ RSpec.feature 'ArtisanEditsAccount', type: :feature do
     expect(page).not_to have_field('Account Status')
   end
 
-    # Inline steps
+  # Inline steps
   def navigate_to_edit_page
     click_link 'Show My Details'
     expect(page).to have_current_path(artisan_path(artisan))
