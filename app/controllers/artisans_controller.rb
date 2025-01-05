@@ -41,12 +41,10 @@ class ArtisansController < ApplicationController
 
   def update
     if @artisan.update(artisan_params)
-      handle_status_change
-      @artisan.save
+      handle_post_update_actions
       redirect_to artisan_path(@artisan), notice: flash[:notice]
     else
-      flash.now[:alert] = 'There was an error updating the artisan.'
-      render :edit
+      handle_update_failure
     end
   end
 
@@ -126,5 +124,23 @@ class ArtisansController < ApplicationController
     messages << 'Artisan details have been successfully updated.' if artisan_params.except(:active).to_h.any? { |_key, value| value.present? }
 
     flash[:notice] = messages.join(' ')
+  end
+
+  # Helper Methods
+  def handle_post_update_actions
+    handle_status_change
+    @artisan.save
+    restore_artisan_session if current_user == @artisan
+  end
+
+  def restore_artisan_session
+    session[:user_email] = @artisan.email
+    session[:user_id] = @artisan.id
+    session[:role] = 'artisan'
+  end
+
+  def handle_update_failure
+    flash.now[:alert] = 'There was an error updating the artisan.'
+    render :edit
   end
 end
