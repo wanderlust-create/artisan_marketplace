@@ -98,3 +98,8 @@ Lint/Syntax:
 
 AllCops:
   SuggestExtensions: false
+
+# To allow for the use of 1, 2 etc in variable names in specs
+RSpec/IndexedLet:
+  Exclude:
+    - "spec/**/*"
