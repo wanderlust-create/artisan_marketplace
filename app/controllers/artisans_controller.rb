@@ -12,7 +12,8 @@ class ArtisansController < ApplicationController
   # Actions
 
   def index
-    @artisans = @admin.artisans
+    @my_artisans = @admin.artisans # Artisans belonging to the logged-in admin
+    @other_artisans = Artisan.where.not(admin: @admin) # Artisans belonging to other admins
   end
 
   def show; end
