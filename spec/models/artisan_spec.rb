@@ -28,7 +28,7 @@ RSpec.describe Artisan, type: :model do
 
     it 'ensures new products are created with visible: true by default' do
       product = create(:product, artisan: artisan)
-      expect(product.visible).to eq(true)
+      expect(product.visible).to be(true)
     end
 
     context 'when the artisan is deactivated' do
