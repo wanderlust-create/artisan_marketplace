@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_02_194130) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_06_023326) do
   create_table "admins", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -69,6 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_02_194130) do
     t.integer "artisan_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "visible", default: true, null: false
     t.index ["artisan_id"], name: "index_products_on_artisan_id"
   end
 
