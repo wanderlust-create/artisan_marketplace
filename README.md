@@ -1,10 +1,10 @@
 # Artisan Marketplace
 
-This project serves as a marketplace for artisans and administrators to manage users, products, and events. The platform includes role-based permissions, enabling super admins to manage regular admins and other entities. Built with Ruby on Rails.
+This project serves as a marketplace for artisans and administrators to manage users and products. The platform includes role-based permissions, enabling super admins to manage regular admins and other entities. Built with Ruby on Rails.
 
 > **Note**: This is Tamara's first project built with the assistance of AI tools, designed to demonstrate advanced development techniques and collaboration with AI.
 
----
+---https://github.com/wanderlust-create/artisan_marketplace/blob/main/README.md
 
 ## 📝 Table of Contents
 
