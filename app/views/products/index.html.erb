@@ -6,12 +6,34 @@
 
 <div id="products">
   <% @products.each do |product| %>
-    <%= render product %>
-      <p>
-        <%= link_to "Show #{product.name}", artisan_product_path(@artisan, product), class: 'btn btn-secondary' %>
+    <div class="product">
+      <h2>
+        <%= product.name %>
+      </h2>
+      <p><strong>Description:</strong>
+        <%= product.description %>
       </p>
-      <% end %>
+      <p><strong>Price:</strong> $<%= product.price %>
+      </p>
+
+      <% if current_user==@artisan %>
+        <p><strong>Stock:</strong>
+          <%= product.stock %>
+        </p>
+        <% end %>
+
+          <p>
+            <%= link_to "Show #{product.name}", artisan_product_path(@artisan, product), class: 'btn btn-secondary' %>
+          </p>
+    </div>
+    <% end %>
 </div>
 
-<%= link_to 'Add New Product' , new_artisan_product_path(@artisan), class: 'btn btn-primary' %>
-<%= link_to 'Back to Dashboard', dashboard_artisan_path(@artisan), class: 'btn btn-primary' %>
+<% if current_user.is_a?(Admin) %>
+  <%= link_to 'Back to All Artisans', admin_artisans_path(current_user), class: 'btn btn-secondary' %>
+    <% end %>
+
+      <% if current_user==@artisan %>
+        <%= link_to 'Add New Product', new_artisan_product_path(@artisan), class: 'btn btn-primary' %>
+          <%= link_to 'Back to Dashboard', dashboard_artisan_path(@artisan), class: 'btn btn-primary' %>
+            <% end %>
