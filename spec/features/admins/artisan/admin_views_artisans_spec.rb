@@ -14,7 +14,7 @@ RSpec.feature 'AdminViewsAllArtisans', type: :feature do
     FactoryBot.create_list(:artisan, 3, admin: another_admin)
   end
 
-  scenario 'Admin views their own artisans with full actions', :js do # rubocop:disable RSpec/MultipleExpectations
+  scenario 'Admin views their own artisans with full actions', :js do
     # Log in as the admin
     login_as(admin)
     expect_to_be_on_dashboard_for(admin)
@@ -33,7 +33,7 @@ RSpec.feature 'AdminViewsAllArtisans', type: :feature do
     end
   end
 
-  scenario 'Admin views other admins artisans with restricted actions', :js do # rubocop:disable RSpec/MultipleExpectations
+  scenario 'Admin views other admins artisans with restricted actions', :js do
     # Log in as the admin
     login_as(admin)
     expect_to_be_on_dashboard_for(admin)
