@@ -2,6 +2,8 @@
 
 This project serves as a marketplace for artisans and administrators to manage users, products, and events. The platform includes role-based permissions, enabling super admins to manage regular admins and other entities. Built with Ruby on Rails.
 
+> **Note**: This is Tamara's first project built with the assistance of AI tools, designed to demonstrate advanced development techniques and collaboration with AI.
+
 ---
 
 ## 📝 Table of Contents
@@ -10,7 +12,7 @@ This project serves as a marketplace for artisans and administrators to manage u
 - [Setup](#setup)
 - [Folder Structure](#folder-structure)
 - [Schema](#schema)
-- [Contributor](#contributor)
+- [Contributors](#contributors)
 
 ---
 
@@ -89,13 +91,13 @@ This project serves as a marketplace for artisans and administrators to manage u
   - Attributes: `id`, `email`, `password_digest`, `role` (enum: 0 = regular, 1 = super_admin), `created_at`, `updated_at`.
 
 - **Artisans**:
-  - Attributes: `id`, `store_name`, `email`, `password_digest`, `admin_id` (FK to Admins), `created_at`, `updated_at`.
+  - Attributes: `id`, `store_name`, `email`, `password_digest`, `admin_id` (FK to Admins), `status` (enum: 0 = active, 1 = inactive), `created_at`, `updated_at`.
 
 - **Customers**:
   - Attributes: `id`, `first_name`, `last_name`, `email`, `created_at`, `updated_at`.
 
 - **Products**:
-  - Attributes: `id`, `name`, `description`, `price`, `stock`, `artisan_id` (FK to Artisans), `created_at`, `updated_at`.
+  - Attributes: `id`, `name`, `description`, `price`, `stock`, `artisan_id` (FK to Artisans), `visibility` (boolean, default: true), `created_at`, `updated_at`.
 
 - **Invoices**:
   - Attributes: `id`, `customer_id` (FK to Customers), `status` (enum: 0 = pending, 1 = completed, 2 = cancelled), `created_at`, `updated_at`.
@@ -109,9 +111,9 @@ This project serves as a marketplace for artisans and administrators to manage u
 - **Transactions**:
   - Attributes: `id`, `invoice_id` (FK to Invoices), `credit_card_number`, `credit_card_expiration_date`, `status` (enum: 0 = approved, 1 = declined, 2 = refunded), `created_at`, `updated_at`.
 
-
 ---
 
-## Contributor <a name="contributor"></a>
-👩🏽‍🎤 Tamara Dowis | [GitHub](https://github.com/wanderlust-create) | [LinkedIn](https://www.linkedin.com/in/tamara-dowis/)
+## Contributors <a name="contributors"></a>
 
+- 🧑🏽‍🎤 Tamara Dowis | [GitHub](https://github.com/wanderlust-create) | [LinkedIn](https://www.linkedin.com/in/tamara-dowis/)
+- 🤖 ChatGPT AI (Assistant)
