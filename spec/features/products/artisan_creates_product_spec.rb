@@ -8,7 +8,7 @@ RSpec.describe 'ArtisanCreatesProduct', type: :feature do
     login_as(artisan) # Simulate artisan login
   end
 
-  scenario 'Artisan navigates to the product creation page from the dashboard' do # rubocop:disable RSpec/MultipleExpectations
+  scenario 'Artisan navigates to the product creation page from the dashboard' do
     visit dashboard_artisan_path(artisan)
     expect(page).to have_content('Artisan Dashboard')
 

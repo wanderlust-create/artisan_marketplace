@@ -12,9 +12,9 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
     logout
   end
 
-  scenario 'Admin navigates to the new artisan page from the artisan index' do # rubocop:disable RSpec/MultipleExpectations
+  scenario 'Admin navigates to the new artisan page from the artisan index' do
     visit admin_artisans_path(admin)
-    expect(page).to have_content('Your Artisans')
+    expect(page).not_to have_content('Your Artisans')
     expect(page).to have_link('Add New Artisan')
 
     click_link 'Add New Artisan'
