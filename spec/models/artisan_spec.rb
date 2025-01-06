@@ -22,4 +22,38 @@ RSpec.describe Artisan, type: :model do
   describe 'secure password' do
     it { is_expected.to have_secure_password }
   end
+
+  describe 'callbacks' do
+    let(:artisan) { create(:artisan, admin: admin, active: true) }
+    let!(:products) { create_list(:product, 2, artisan: artisan, stock: 100) }
+
+    it 'ensures new products are created with visible: true by default' do
+      product = create(:product, artisan: artisan)
+      expect(product.visible).to eq(true)
+    end
+
+    context 'when the artisan is deactivated' do
+      it 'sets all associated products to visible: false' do
+        artisan.update(active: false)
+
+        artisan.products.each do |product|
+          expect(product.reload.visible).to be(false)
+        end
+      end
+    end
+
+    context 'when the artisan is reactivated' do
+      before do
+        artisan.update(active: false) # Deactivate first to test reactivation
+      end
+
+      it 'sets all associated products to visible: true' do
+        artisan.update(active: true)
+
+        artisan.products.each do |product|
+          expect(product.reload.visible).to be(true)
+        end
+      end
+    end
+  end
 end
