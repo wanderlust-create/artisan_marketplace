@@ -2,9 +2,7 @@
 
 This project serves as a marketplace for artisans and administrators to manage users and products. The platform includes role-based permissions, enabling super admins to manage regular admins and other entities. Built with Ruby on Rails.
 
-> **Note**: This is Tamara's first project built with the assistance of AI tools, designed to demonstrate advanced development techniques and collaboration with AI.
-
----https://github.com/wanderlust-create/artisan_marketplace/blob/main/README.md
+> **Note**: This is Tamara's first project built with the assistance of AI tools, showcasing her growth as a developer and collaboration with AI.
 
 ## 📝 Table of Contents
 
@@ -115,5 +113,5 @@ This project serves as a marketplace for artisans and administrators to manage u
 
 ## Contributors <a name="contributors"></a>
 
-- 🧑🏽‍🎤 Tamara Dowis | [GitHub](https://github.com/wanderlust-create) | [LinkedIn](https://www.linkedin.com/in/tamara-dowis/)
+- 👩🏽‍🎤 Tamara Dowis | [GitHub](https://github.com/wanderlust-create) | [LinkedIn](https://www.linkedin.com/in/tamara-dowis/)
 - 🤖 ChatGPT AI (Assistant)
