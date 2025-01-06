@@ -7,26 +7,24 @@ RSpec.describe 'Admin views artisan products', type: :feature do
   let!(:artisan1) { create_list(:artisan, 3, admin: admin1) }
   let!(:artisan2) { create_list(:artisan, 3, admin: admin2) }
 
-  let!(:products1) do
+  before do
     artisan1.each do |artisan|
       create_list(:product, 2, artisan: artisan, stock: 100)
     end
-  end
 
-  let!(:products2) do
     artisan2.each do |artisan|
       create_list(:product, 2, artisan: artisan, stock: 100)
     end
-  end
 
-  before { login_as(admin1) }
+    login_as(admin1)
+  end
 
   describe "Admin views their own artisans' products" do
     it 'displays all products belonging to an artisan' do
       artisan = artisan1.first
       visit artisan_products_path(artisan.id)
 
-      artisan.products.each do |product|
+      artisan.reload.products.each do |product|
         expect(page).to have_content(product.name)
         expect(page).to have_content(product.description)
         expect(page).to have_content(product.price)
@@ -38,7 +36,7 @@ RSpec.describe 'Admin views artisan products', type: :feature do
       artisan = artisan1.first
       visit artisan_products_path(artisan.id)
 
-      artisan.products.each do |product|
+      artisan.reload.products.each do |_product|
         expect(page).not_to have_link('Edit')
         expect(page).not_to have_link('Delete')
       end
@@ -46,7 +44,7 @@ RSpec.describe 'Admin views artisan products', type: :feature do
 
     it "navigates to a product's show page" do
       artisan = artisan1.first
-      product = artisan.products.first
+      product = artisan.reload.products.first
       visit artisan_products_path(artisan.id)
 
       click_link product.name
@@ -59,7 +57,7 @@ RSpec.describe 'Admin views artisan products', type: :feature do
       artisan = artisan2.first
       visit artisan_products_path(artisan.id)
 
-      artisan.products.each do |product|
+      artisan.reload.products.each do |product|
         expect(page).to have_content(product.name)
         expect(page).to have_content(product.description)
         expect(page).to have_content(product.price)
@@ -71,7 +69,7 @@ RSpec.describe 'Admin views artisan products', type: :feature do
       artisan = artisan2.first
       visit artisan_products_path(artisan.id)
 
-      artisan.products.each do |product|
+      artisan.reload.products.each do |_product|
         expect(page).not_to have_link('Edit')
         expect(page).not_to have_link('Delete')
       end
@@ -103,10 +101,10 @@ RSpec.describe 'Admin views artisan products', type: :feature do
     login_as(admin1)
 
     # Visit the artisan's products page
-    visit artisan_products_path(artisan1)
+    visit artisan_products_path(artisan1.first)
 
     # Verify that the admin does not see artisan-specific links
-    expect(page).not_to have_link('Add New Product', href: new_artisan_product_path(artisan1))
-    expect(page).not_to have_link('Back to Dashboard', href: dashboard_artisan_path(artisan1))
+    expect(page).not_to have_link('Add New Product', href: new_artisan_product_path(artisan1.first))
+    expect(page).not_to have_link('Back to Dashboard', href: dashboard_artisan_path(artisan1.first))
   end
 end
