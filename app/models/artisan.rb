@@ -11,6 +11,15 @@ class Artisan < ApplicationRecord
 
   after_update :update_product_visibility, if: -> { saved_change_to_active? }
 
+  # Public Methods
+  def active_for_authentication?
+    active
+  end
+
+  def inactive_message
+    'Your account has been deactivated. Please contact your administrator.'
+  end
+
   private
 
   def update_product_visibility
