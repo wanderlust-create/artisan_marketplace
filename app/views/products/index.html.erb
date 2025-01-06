@@ -13,7 +13,7 @@
       <p><strong>Description:</strong>
         <%= product.description %>
       </p>
-      <p><strong>Price:</strong> $<%= product.price %>
+      <p><strong>Price:</strong> $<%= '%.2f' % product.price %>
       </p>
 
       <% if current_user==@artisan %>
@@ -23,11 +23,12 @@
         <% end %>
 
           <p>
-            <%= link_to "Show #{product.name}", artisan_product_path(@artisan, product), class: 'btn btn-secondary' %>
+            <%= link_to "Show #{product.name}" , artisan_product_path(@artisan, product), class: 'btn btn-secondary' %>
           </p>
     </div>
     <% end %>
 </div>
+
 
 <% if current_user.is_a?(Admin) %>
   <%= link_to 'Back to All Artisans', admin_artisans_path(current_user), class: 'btn btn-secondary' %>
