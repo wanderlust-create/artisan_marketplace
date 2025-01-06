@@ -60,4 +60,17 @@ RSpec.describe Artisan, type: :model do
       end
     end
   end
+
+  describe '#active_for_authentication?' do
+    let(:active_artisan) { create(:artisan, active: true) }
+    let(:inactive_artisan) { create(:artisan, active: false) }
+
+    it 'returns true for active artisans' do
+      expect(active_artisan.active_for_authentication?).to be(true)
+    end
+
+    it 'returns false for inactive artisans' do
+      expect(inactive_artisan.active_for_authentication?).to be(false)
+    end
+  end
 end
