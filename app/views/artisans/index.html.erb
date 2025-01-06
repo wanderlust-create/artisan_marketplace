@@ -1,11 +1,12 @@
-<h1>Your Artisans</h1>
+<h1>All Artisans</h1>
 
 <div class="actions" style="margin-bottom: 1rem;">
   <%= link_to 'Add New Artisan' , new_admin_artisan_path(@admin), class: 'btn btn-primary' %>
 </div>
 
-<% if @artisans.any? %>
-  <table id="artisan-list">
+<% if @my_artisans.any? %>
+  <h2>My Artisans</h2>
+  <table id="my-artisans-list">
     <thead>
       <tr>
         <th>Store Name</th>
@@ -14,8 +15,8 @@
       </tr>
     </thead>
     <tbody>
-      <% @artisans.each do |artisan| %>
-        <tr>
+      <% @my_artisans.each do |artisan| %>
+        <tr id="artisan-<%= artisan.id %>">
           <td>
             <%= artisan.store_name %>
           </td>
@@ -24,13 +25,50 @@
           </td>
           <td>
             <%= link_to "Show #{artisan.store_name}" , artisan_path(artisan.id), class: 'btn btn-secondary' %>
+              <%= link_to "Edit" , edit_admin_artisan_path(@admin, artisan), class: 'btn btn-secondary' %>
           </td>
         </tr>
         <% end %>
     </tbody>
   </table>
   <% else %>
-    <p>You currently have no artisans. Start by creating a new artisan.</p>
+    <p>No artisans found. Create your first artisan!</p>
     <% end %>
 
-      <%= link_to 'Back to Dashboard' , dashboard_path_for(current_user) %>
+      <% if @other_artisans.any? %>
+        <h2>
+          Other Artisans
+          <button id="toggle-other-artisans" class="btn btn-secondary" data-toggle="collapse" data-target="#other-artisans-list" aria-expanded="false" aria-controls="other-artisans-list">
+            Toggle View
+          </button>
+        </h2>
+        <div id="other-artisans-list" class="collapse">
+          <table id="other-artisans-table">
+            <thead>
+              <tr>
+                <th>Store Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @other_artisans.each do |artisan| %>
+                <tr id="artisan-<%= artisan.id %>">
+                  <td>
+                    <%= artisan.store_name %>
+                  </td>
+                  <td>
+                    <%= artisan.email %>
+                  </td>
+                  <td>
+                    <%= link_to "Show #{artisan.store_name}" , artisan_path(artisan.id), class: 'btn btn-secondary' %>
+                      <!-- No Edit or Delete links for other admin's artisans -->
+                  </td>
+                </tr>
+                <% end %>
+            </tbody>
+          </table>
+        </div>
+        <% end %>
+
+          <%= link_to 'Back to Dashboard' , dashboard_path_for(current_user) %>
