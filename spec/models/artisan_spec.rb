@@ -25,7 +25,6 @@ RSpec.describe Artisan, type: :model do
 
   describe 'callbacks' do
     let(:artisan) { create(:artisan, admin: admin, active: true) }
-    let!(:products) { create_list(:product, 2, artisan: artisan, stock: 100) }
 
     it 'ensures new products are created with visible: true by default' do
       product = create(:product, artisan: artisan)
@@ -33,6 +32,10 @@ RSpec.describe Artisan, type: :model do
     end
 
     context 'when the artisan is deactivated' do
+      before do
+        create_list(:product, 2, artisan: artisan, stock: 100) # Create products for the specific context
+      end
+
       it 'sets all associated products to visible: false' do
         artisan.update(active: false)
 
@@ -44,6 +47,7 @@ RSpec.describe Artisan, type: :model do
 
     context 'when the artisan is reactivated' do
       before do
+        create_list(:product, 2, artisan: artisan, stock: 100) # Create products for the specific context
         artisan.update(active: false) # Deactivate first to test reactivation
       end
 
