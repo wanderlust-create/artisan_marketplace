@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  include SessionPermissions
+
   def new
     # Render the login form
   end
@@ -7,8 +9,7 @@ class SessionsController < ApplicationController
     user = find_user_by_email(params[:email])
 
     if user&.authenticate(params[:password])
-      log_in_user(user)
-      redirect_to dashboard_path_for(user)
+      handle_user_authentication(user)
     else
       handle_login_failure
     end
@@ -21,6 +22,18 @@ class SessionsController < ApplicationController
   end
 
   private
+
+  def handle_user_authentication(user)
+    result = verify_user_permissions(user)
+
+    if result[:status] == :inactive
+      flash[:alert] = result[:message]
+      redirect_to login_path
+    else
+      log_in_user(user)
+      redirect_to dashboard_path_for(user)
+    end
+  end
 
   def find_user_by_email(email)
     Admin.find_by(email: email) || Artisan.find_by(email: email)
