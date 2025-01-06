@@ -86,8 +86,9 @@ Style/SpecialGlobalVars:
 Layout/LineLength:
   Max: 198
 
+# Increased the maximum expectations limit to 10 due to additional login expectations in each test.
 RSpec/MultipleExpectations:
-  Max: 5
+  Max: 10
 
 RSpec/ExampleLength:
   Max: 15
