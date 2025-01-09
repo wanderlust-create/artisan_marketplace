@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
 
     if result[:status] == :inactive
       flash[:alert] = result[:message]
-      redirect_to login_path
+      redirect_to auth_login_path(user)
     else
       log_in_user(user)
       redirect_to dashboard_path_for(user)
