@@ -25,4 +25,7 @@ Rails.application.routes.draw do
     end
     resources :products, only: %i[index new create show edit update destroy]
   end
+
+  # Invoices (generic, not yet tied to customers)
+  resources :invoices, only: [:show]
 end

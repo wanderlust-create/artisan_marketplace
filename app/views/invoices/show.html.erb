@@ -1,10 +1,52 @@
-<p style="color: green"><%= notice %></p>
+<h1>Invoice #<%= @invoice.id %></h1>
+<p>Status: <%= @invoice.status.capitalize %></p>
 
-<%= render @invoice %>
+<h2>Invoice Items</h2>
+<% if @invoice.invoice_items.any? %>
+  <table id="invoice-items">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Product Description</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @invoice.invoice_items.each do |item| %>
+        <tr id="invoice-item-<%= item.id %>">
+          <td><%= item.product.name %></td>
+          <td><%= item.product.description %></td>
+          <td><%= item.quantity %></td>
+          <td><%= number_to_currency(item.unit_price) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No items on this invoice.</p>
+<% end %>
 
-<div>
-  <%= link_to "Edit this invoice", edit_invoice_path(@invoice) %> |
-  <%= link_to "Back to invoices", invoices_path %>
-
-  <%= button_to "Destroy this invoice", @invoice, method: :delete %>
-</div>
+<h2>Transactions</h2>
+<% if @invoice.transactions.any? %>
+  <table id="transactions">
+    <thead>
+      <tr>
+        <th>Transaction ID</th>
+        <th>Credit Card Number</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @invoice.transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.id %></td>
+          <td><%= transaction.credit_card_number.gsub(/.(?=.{4})/, '*' ) %></td>
+          <td><%= transaction.status.capitalize %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No transactions available for this invoice.</p>
+<% end %>

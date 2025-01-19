@@ -15,11 +15,16 @@ RSpec.describe Invoice, type: :model do
 
   describe 'data creation' do
     let(:customer) { create(:customer) }
-    let(:invoice) { create(:invoice, customer: customer, status: :shipped) }
 
     it 'creates a valid invoice with a status' do
+      invoice = create(:invoice, customer: customer, status: :shipped)
       expect(invoice).to be_valid
       expect(invoice.status).to eq('shipped')
+    end
+
+    it 'sets the default status to pending' do
+      invoice = create(:invoice, customer: customer) # No status provided
+      expect(invoice.status).to eq('pending') # Ensures the default is applied
     end
   end
 end

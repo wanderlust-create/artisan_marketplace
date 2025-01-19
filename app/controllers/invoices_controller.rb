@@ -6,8 +6,9 @@ class InvoicesController < ApplicationController
     @invoices = Invoice.all
   end
 
-  # GET /invoices/1 or /invoices/1.json
-  def show; end
+  def show
+    @invoice = Invoice.includes(:invoice_items, :products, :transactions).find(params[:id])
+  end
 
   # GET /invoices/new
   def new
