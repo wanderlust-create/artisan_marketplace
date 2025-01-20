@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_06_023326) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_19_233044) do
   create_table "admins", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -39,6 +39,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_06_023326) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_customers_on_email", unique: true
+  end
+
+  create_table "discounts", force: :cascade do |t|
+    t.integer "product_id", null: false
+    t.decimal "discount_price", precision: 10, scale: 2, null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_discounts_on_product_id"
   end
 
   create_table "invoice_items", force: :cascade do |t|
@@ -95,6 +105,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_06_023326) do
   end
 
   add_foreign_key "artisans", "admins"
+  add_foreign_key "discounts", "products"
   add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoice_items", "products"
   add_foreign_key "invoices", "customers"
