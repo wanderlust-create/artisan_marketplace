@@ -14,7 +14,7 @@ RSpec.describe Discount, type: :model do
 
     it 'validates that end_date is after start_date' do
       product = create(:product)
-      invalid_discount = build(:discount, product: product, start_date: Date.today, end_date: Date.today - 1)
+      invalid_discount = build(:discount, product: product, start_date: Time.zone.today, end_date: Time.zone.today - 1)
 
       expect(invalid_discount).not_to be_valid
       expect(invalid_discount.errors[:end_date]).to include('must be after the start date')
@@ -32,11 +32,9 @@ RSpec.describe Discount, type: :model do
       let!(:discount2) { create(:discount, product: another_product) }
 
       it 'returns discounts for the specified artisan' do
-        expect(Discount.by_artisan(artisan.id)).to include(discount1)
-        expect(Discount.by_artisan(artisan.id)).not_to include(discount2)
+        expect(described_class.by_artisan(artisan.id)).to include(discount1)
+        expect(described_class.by_artisan(artisan.id)).not_to include(discount2)
       end
     end
   end
 end
-
-
