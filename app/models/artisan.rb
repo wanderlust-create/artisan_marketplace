@@ -2,6 +2,7 @@ class Artisan < ApplicationRecord
   belongs_to :admin
 
   has_many :products, dependent: :destroy
+  has_many :discounts, through: :products
 
   has_secure_password
 
