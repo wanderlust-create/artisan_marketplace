@@ -2,7 +2,12 @@ class Discount < ApplicationRecord
   belongs_to :product
   has_one :artisan, through: :product
 
-  validates :discount_price, presence: true, numericality: { greater_than: 0 }
+  # Ensure discount price is less than or equal to the product price and greater than 0.
+  # Allows nil values when the user enters a percentage discount, which will be calculated in the controller.
+  validates :discount_price, presence: true, numericality: {
+    greater_than: 0,
+    less_than_or_equal_to: ->(discount) { discount.product&.price || Float::INFINITY }
+  }
   validates :start_date, presence: true
   validates :end_date, presence: true
   validate :end_date_after_start_date

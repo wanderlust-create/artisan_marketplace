@@ -23,15 +23,15 @@ RSpec.describe Discount, type: :model do
 
   describe 'scopes' do
     describe '.by_artisan' do
-      let(:artisan) { create(:artisan) }
-      let(:another_artisan) { create(:artisan) }
-      let(:product) { create(:product, artisan: artisan) }
-      let(:another_product) { create(:product, artisan: another_artisan) }
-
-      let!(:discount1) { create(:discount, product: product) }
-      let!(:discount2) { create(:discount, product: another_product) }
-
       it 'returns discounts for the specified artisan' do
+        artisan = create(:artisan)
+        another_artisan = create(:artisan)
+        product = create(:product, artisan: artisan)
+        another_product = create(:product, artisan: another_artisan)
+
+        discount1 = create(:discount, product: product)
+        discount2 = create(:discount, product: another_product)
+
         expect(described_class.by_artisan(artisan.id)).to include(discount1)
         expect(described_class.by_artisan(artisan.id)).not_to include(discount2)
       end
