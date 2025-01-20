@@ -18,15 +18,15 @@ Rails.application.routes.draw do
     resources :artisans, only: %i[index new create edit update destroy]
   end
 
-# Artisans and their related products
-resources :artisans, only: %i[show] do
-  member do
-    get 'dashboard', to: 'artisans#dashboard'
+  # Artisans and their related products
+  resources :artisans, only: %i[show] do
+    member do
+      get 'dashboard', to: 'artisans#dashboard'
+    end
+    resources :products, only: %i[index new create show edit update destroy] do
+      resources :discounts, only: %i[new create edit update destroy]
+    end
   end
-  resources :products, only: %i[index new create show edit update destroy] do
-    resources :discounts, only: %i[new create edit update destroy]
-  end
-end
 
   # Invoices (generic, not yet tied to customers)
   resources :invoices, only: [:show]
