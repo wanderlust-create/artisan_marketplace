@@ -7,6 +7,7 @@ class ProductsController < ApplicationController
 
   def show
     @product = @artisan.products.find(params[:id])
+    @active_discounts = @product.discounts.active_or_future
   end
 
   def new
