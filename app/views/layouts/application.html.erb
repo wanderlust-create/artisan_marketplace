@@ -20,10 +20,8 @@
         </li>
         <% if current_user %>
           <li>
-            <li>
-              <%= link_to 'Logout' , auth_logout_path, data: { turbo_method: :delete,
-                turbo_confirm: 'Are you sure you want to log out?' }, class: 'btn btn-danger' %>
-            </li>
+            <%= link_to 'Logout' , auth_logout_path, data: { turbo_method: :delete,
+              turbo_confirm: 'Are you sure you want to log out?' }, class: 'btn btn-danger' %>
           </li>
           <% else %>
             <li>
@@ -33,13 +31,26 @@
       </ul>
     </nav>
   </header>
-  <% flash.each do |key, message| %>
-    <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %>">
-      <%= message %>
-    </div>
-    <% end %>
 
-      <%= yield %>
+  <!-- Flash messages -->
+  <% flash.each do |key, message| %>
+    <% if key=='errors' %>
+      <!-- Only display errors in a list -->
+      <ul class="error-messages">
+        <% message.split(', ').each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <!-- General alerts or notices -->
+      <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %>">
+          <%= message %>
+      </div>
+      <% end %>
+      <% end %>
+
+    <%= yield %>
 </body>
 
 </html>
+
