@@ -1,4 +1,4 @@
-<!-- Render product details without stock for admins -->
+<!-- Render product details -->
 <div class="product-details">
   <h2>
     <%= @product.name %>
@@ -6,10 +6,10 @@
   <p><strong>Description:</strong>
     <%= @product.description %>
   </p>
-  <p><strong>Price:</strong> $<%= '%.2f' % @product.price %> </p>
+  <p><strong>Price:</strong>
+    <%= number_to_currency(@product.price) %>
+  </p>
 
-
-  <!-- Show stock only if the current user is the artisan -->
   <% if current_user==@product.artisan %>
     <p><strong>Stock:</strong>
       <%= @product.stock %>
@@ -17,23 +17,55 @@
     <% end %>
 </div>
 
-<!-- Links for Artisan -->
-<% if current_user==@product.artisan %>
-  <div class="artisan-links">
-    <%= link_to "Edit #{@product.name}", edit_artisan_product_path(@product.artisan, @product),
-      class: 'btn btn-secondary' %>
-      |
-      <%= link_to "Delete #{@product.name}", artisan_product_path(@product.artisan, @product), data: { turbo_method:
-        :delete, turbo_confirm: "Are you sure you want to delete your #{@product.name}?" }, class: 'btn btn-danger' %>
-        <%= link_to 'Add New Product', new_artisan_product_path(@product.artisan), class: 'btn btn-primary' %>
-          <%= link_to 'Back to Dashboard', dashboard_artisan_path(@product.artisan), class: 'btn btn-primary' %>
-  </div>
-  <% end %>
+<!-- Discount Information -->
+<h2>Discount Information</h2>
+<% if @active_discounts.any? %>
+  <table id="discounts">
+    <thead>
+      <tr>
+        <th>Discount Price</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @active_discounts.each do |discount| %>
+        <tr id="discount-<%= discount.id %>">
+          <td>
+            <%= number_to_currency(discount.discount_price) %>
+          </td>
+          <td>
+            <%= discount.start_date.strftime('%B %d, %Y') %>
+          </td>
+          <td>
+            <%= discount.end_date.strftime('%B %d, %Y') %>
+          </td>
+        </tr>
+        <% end %>
+    </tbody>
+  </table>
+  <% else %>
+    <p>No current or upcoming discounts for this product.</p>
+    <% end %>
 
-    <!-- Links for Admin -->
-    <% if current_user.is_a?(Admin) %>
-      <div class="admin-links">
-        <%= link_to 'Back to Artisan Products', artisan_products_path(@product.artisan), class: 'btn btn-secondary' %>
-          <%= link_to 'Back to All Artisans', admin_artisans_path(current_user), class: 'btn btn-secondary' %>
-      </div>
-      <% end %>
+      <!-- Artisan Actions -->
+      <% if current_user==@product.artisan %>
+        <nav class="artisan-actions">
+          <%= link_to 'Edit Product' , edit_artisan_product_path(@product.artisan, @product), class: 'btn btn-secondary'
+            %>
+            <%= link_to 'Delete Product' , artisan_product_path(@product.artisan, @product), method: :delete, data: {
+              confirm: "Are you sure you want to delete this product?" }, class: 'btn btn-danger' %>
+              <%= link_to 'Add New Product' , new_artisan_product_path(@product.artisan), class: 'btn btn-primary' %>
+                <%= link_to 'Back to Dashboard' , dashboard_artisan_path(@product.artisan), class: 'btn btn-secondary'
+                  %>
+        </nav>
+        <% end %>
+
+          <!-- Admin Actions -->
+          <% if current_user.is_a?(Admin) %>
+            <nav class="admin-actions">
+              <%= link_to 'Back to Artisan Products' , artisan_products_path(@product.artisan),
+                class: 'btn btn-secondary' %>
+                <%= link_to 'Back to All Artisans' , admin_artisans_path(current_user), class: 'btn btn-secondary' %>
+            </nav>
+            <% end %>
