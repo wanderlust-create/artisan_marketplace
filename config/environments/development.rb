@@ -17,6 +17,9 @@ Rails.application.configure do
   # Enable server timing
   config.server_timing = true
 
+  # Rotate log files when they reach 50MB, keep 1 log file and 1 old log file.
+  config.logger = ActiveSupport::Logger.new('log/development.log', 1, 50.megabytes)
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join('tmp/caching-dev.txt').exist?
