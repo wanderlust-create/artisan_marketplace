@@ -1,13 +1,13 @@
 class ProductsController < ApplicationController
-  before_action :set_artisan, only: %i[index show new create edit update destroy]
+  before_action :set_product_and_authorize, only: %i[show edit update destroy]
+  before_action :set_artisan, only: %i[index show]
 
   def index
     @products = @artisan.products.all
   end
 
   def show
-    @product = @artisan.products.find(params[:id])
-    @active_discounts = @product.discounts.active_or_future
+    @active_discounts = @product.discounts.respond_to?(:current_and_upcoming_discounts) ? @product.discounts.current_and_upcoming_discounts : []
   end
 
   def new
@@ -23,12 +23,9 @@ class ProductsController < ApplicationController
     end
   end
 
-  def edit
-    @product = @artisan.products.find(params[:id])
-  end
+  def edit; end
 
   def update
-    @product = Product.find(params[:id])
     if @product.update(product_params)
       redirect_to artisan_product_path(@artisan, @product), notice: 'Product was successfully updated.'
     else
@@ -38,7 +35,6 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product = Product.find(params[:id])
     @product.destroy
     redirect_to dashboard_artisan_path(@artisan), notice: 'Product was successfully deleted.'
   end
@@ -46,13 +42,41 @@ class ProductsController < ApplicationController
   private
 
   def set_artisan
+    @artisan = find_artisan
+  end
+
+  def set_product_and_authorize
+    @product = find_product
+    return unless @product
+
+    @artisan = find_artisan
+    return unless @artisan
+
+    # Check if the current artisan matches
+    return if @artisan == @product.artisan
+
+    flash[:alert] = 'You are not authorized to access this page'
+    redirect_to dashboard_artisan_path(@artisan) and return
+  end
+
+  def find_product
+    Product.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = 'The product you were looking for doesn\'t exist.'
+    redirect_to params[:artisan_id] ? dashboard_artisan_path(params[:artisan_id]) : root_path and return
+  end
+
+  def find_artisan
     if params[:artisan_id]
-      @artisan = Artisan.find(params[:artisan_id])
+      Artisan.find(params[:artisan_id])
     elsif params[:id]
-      @artisan = Artisan.find(params[:id]).admin
+      Product.find(params[:id]).artisan
     else
       raise ActiveRecord::RecordNotFound, 'Artisan could not be determined'
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = 'The artisan you were looking for doesn\'t exist.'
+    redirect_to dashboard_artisan_path(@artisan) and return
   end
 
   def product_params
