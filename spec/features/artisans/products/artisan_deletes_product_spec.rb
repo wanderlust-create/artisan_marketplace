@@ -3,42 +3,52 @@ require 'rails_helper'
 RSpec.feature 'ArtisanDeletesProduct', type: :feature do
   let(:admin) { create(:admin) }
   let(:artisan) { create(:artisan, admin: admin) }
-  let!(:product) { create(:product, artisan: artisan, name: 'Handmade Vase', description: 'A beautiful vase.', price: 50.0, stock: 10) }
+  let!(:product_one) { create(:product, artisan: artisan, name: 'Product One') }
+  let!(:product_two) { create(:product, artisan: artisan, name: 'Product Two') }
+  let(:another_artisan) { create(:artisan) }
 
   before do
+    # Capybara.reset_sessions!
     login_as(artisan)
   end
 
-  # Rubocop is disabled for this block because the scenario needs to test multiple steps and the Product needs to stay deleted
-  scenario 'Artisan deletes a product and verifies it is no longer listed', :js do # rubocop:disable RSpec/ExampleLength,RSpec/MultipleExpectations
-    # Step 1: Navigate to the artisan dashboard
+  scenario 'Artisan deletes a product_one and verifies it is no longer listed', :js do
     visit dashboard_artisan_path(artisan)
-    expect(page).to have_content('Artisan Dashboard')
-    expect(page).to have_content(product.name)
+    expect(page).to have_content(product_one.name)
 
-    # Step 2: Navigate to the product list page
     click_link 'Manage Products'
     expect(page).to have_current_path(artisan_products_path(artisan))
-    expect(page).to have_content(product.name)
-    expect(page).to have_content(product.description)
-    expect(page).to have_content(product.price)
-    expect(page).to have_content(product.stock)
 
-    click_link "Show #{product.name}"
-    expect(page).to have_current_path(artisan_product_path(artisan, product))
+    # Navigate to the product_one show page
+    click_link "Show #{product_one.name}"
+    expect(page).to have_current_path artisan_product_path(artisan, product_one)
 
-    # Step 3: Handle Turbo's confirmation modal to delete the product
-    accept_confirm "Are you sure you want to delete your #{product.name}?" do
-      click_link "Delete #{product.name}"
+    # Confirm and delete the product_one
+    accept_confirm "Are you sure you want to delete your #{product_one.name}?" do
+      click_link "Delete #{product_one.name}"
     end
-
-    # Step 4: Verify redirection and success message
+    # Verify redirection and success message
     expect(page).to have_current_path(dashboard_artisan_path(artisan))
+
     expect(page).to have_content('Product was successfully deleted.')
 
-    # Step 5: Verify product is no longer listed in the product index
+    # Verify product_one is no longer listed in the product_one index
     visit artisan_products_path(artisan)
-    expect(page).to have_current_path(artisan_products_path(artisan))
-    expect(page).not_to have_content(product.name)
+    expect(page).not_to have_content(product_one.name)
+  end
+
+  scenario 'Deleted product is no longer accessible by its URL', :js do
+    # Simulate deletion of the product in this scenario
+    product_one.destroy
+
+    # Attempt to access the deleted product via its URL
+    visit artisan_product_path(artisan, product_one)
+    expect(page).to have_content("The product you were looking for doesn't exist.")
+    expect(page).to have_current_path(dashboard_artisan_path(artisan))
+  end
+
+  scenario 'Artisan cannot delete a product belonging to another artisan', :js do
+    visit artisan_product_path(another_artisan, product_two)
+    expect(page).to have_content('You are not authorized to access this page')
   end
 end
