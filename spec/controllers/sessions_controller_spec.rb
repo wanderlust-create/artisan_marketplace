@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe SessionsController, type: :controller do
-  let(:regular_admin) { FactoryBot.create(:admin, email: 'admin@example.com', password: 'password', role: :regular) }
-  let(:super_admin) { FactoryBot.create(:admin, :super_admin, email: 'superadmin@example.com', password: 'password') }
-  let(:artisan) { FactoryBot.create(:artisan, email: 'artisan@example.com', password: 'password') }
+  # Use test seed data
+  let!(:super_admin) { Admin.find_by(email: 'superadmin@example.com') }
+  let!(:regular_admin) { Admin.find_by(email: 'admin@example.com') }
+  let!(:artisan) { Artisan.first } # Grab any seeded artisan
 
   describe 'GET #new' do
     it 'renders the login form' do
