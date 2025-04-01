@@ -10,9 +10,7 @@ Rails.application.configure do
 
   # Turn false under Spring and add config.action_view.cache_template_loading = true.
   config.cache_classes = true
-
-  # Session store configuration for tests
-  config.session_store :cookie_store, key: '_your_app_session', domain: '127.0.0.1'
+  config.session_store :cookie_store, key: '_your_app_session', domain: nil
 
   # Eager loading loads your whole application. When running a single test locally,
   # this probably isn't necessary. It's a good idea to do in a continuous integration

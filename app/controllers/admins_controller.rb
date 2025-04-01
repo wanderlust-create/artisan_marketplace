@@ -21,11 +21,15 @@ class AdminsController < ApplicationController
   end
 
   def create
-    @admin = Admin.new(admin_params.merge(role: 'regular')) # Ensure default role is regular
-
+    @admin = Admin.new(admin_params.merge(role: 'regular'))
     if @admin.save
       redirect_to admins_path, notice: 'Admin was successfully created.'
     else
+      puts "PARAMS: #{params.inspect}"
+      puts "ADMIN ATTRS: #{@admin.attributes.inspect}"
+      puts "@admin valid?: #{@admin.valid?}"
+      puts "ERRORS: #{@admin.errors.full_messages}"
+
       render :new
     end
   end
@@ -77,11 +81,7 @@ class AdminsController < ApplicationController
   end
 
   def admin_params
-    if current_user&.super_admin?
-      params.require(:admin).permit(:email, :password, :password_confirmation, :role)
-    else
-      params.require(:admin).permit(:email, :password, :password_confirmation)
-    end
+    params.require(:admin).permit(:email, :password, :password_confirmation)
   end
 
   def admin_role_change_attempt?

@@ -17,7 +17,7 @@ end
 # Configure Capybara drivers
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :selenium_chrome
-Capybara.default_max_wait_time = 100 # Default is 2 seconds
+Capybara.default_max_wait_time = 4 # Default is 2 seconds
 
 # Ensure the Rails environment is set to test
 ENV['RAILS_ENV'] ||= 'test'
@@ -43,9 +43,10 @@ end
 
 # Configure RSpec
 RSpec.configure do |config|
-  # Configure system tests to use appropriate drivers
-  config.before(:each, type: :system) do
-    driven_by :rack_test
+  # # Configure system tests to use appropriate drivers
+  # Capybara.javascript_driver = :selenium_chrome
+  config.before(:each, :js, type: :system) do
+    driven_by :selenium_chrome
   end
 
   # Include route helpers
@@ -57,11 +58,18 @@ RSpec.configure do |config|
   # Include FeatureHelpers for feature specs
   config.include FeatureHelpers, type: :feature
 
+  config.include TestSeedHelpers
+
   # Set the fixture path
   config.fixture_path = Rails.root.join('spec/fixtures').to_s
 
   # Use transactional fixtures for non-JS tests
   config.use_transactional_fixtures = true
+
+  # Seed the test database before the test suite runs
+  config.before(:suite) do
+    Rails.application.load_seed
+  end
 
   # Automatically infer spec types from file locations
   config.infer_spec_type_from_file_location!

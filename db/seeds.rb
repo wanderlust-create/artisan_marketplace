@@ -10,83 +10,91 @@ Invoice.destroy_all
 InvoiceItem.destroy_all
 Transaction.destroy_all
 
-# Create Admins
-5.times do
-  Admin.create!(
-    email: Faker::Internet.unique.email,
-    password: 'password' # Fixed password for simplicity
-  )
+Rails.logger.debug '🌱 Seeding dev/test data...'
+
+# Admins
+super_admin = Admin.create!(
+  email: 'superadmin@example.com',
+  password: 'password',
+  password_confirmation: 'password',
+  role: :super_admin
+)
+
+regular_admin = Admin.create!(
+  email: 'admin@example.com',
+  password: 'password',
+  password_confirmation: 'password',
+  role: :regular
+)
+
+unauthorized_admin = Admin.create!(
+  email: 'unauthorized_admin@example.com',
+  password: 'password',
+  password_confirmation: 'password',
+  role: :regular
+)
+
+# Artisans, Products, and Discounts
+[super_admin, regular_admin].each do |admin|
+  2.times do
+    artisan = Artisan.create!(
+      email: Faker::Internet.unique.email,
+      password: 'password',
+      password_confirmation: 'password',
+      store_name: Faker::Company.name,
+      admin: admin
+    )
+
+    2.times do
+      product = artisan.products.create!(
+        name: Faker::Commerce.product_name,
+        description: Faker::Lorem.sentence,
+        price: Faker::Commerce.price(range: 10..100),
+        stock: rand(10..50)
+      )
+
+      product.discounts.create!(
+        discount_price: (product.price * 0.8).round(2),
+        start_date: Time.zone.today,
+        end_date: Time.zone.today + 30
+      )
+    end
+  end
 end
 
-# Create Artisans linked to Admins
-30.times do
-  Artisan.create!(
-    store_name: Faker::Company.unique.name,
-    email: Faker::Internet.unique.email,
-    password: 'password',
-    admin: Admin.order('RANDOM()').first # Random admin association
-  )
-end
-
-# Create Customers
-20.times do
-  Customer.create!(
+# Customers, Invoices, Reviews, Transactions
+3.times do
+  customer = Customer.create!(
     first_name: Faker::Name.first_name,
     last_name: Faker::Name.last_name,
     email: Faker::Internet.unique.email
   )
-end
 
-# Create Products linked to Artisans
-Artisan.all.find_each do |artisan|
-  rand(5..13).times do
-    artisan.products.create!(
-      name: Faker::Commerce.unique.product_name,
-      description: Faker::Lorem.paragraph,
-      price: Faker::Commerce.price(range: 10.0..500.0).round(2),
-      stock: rand(5..100)
+  invoice = customer.invoices.create!(status: :pending)
+
+  Product.order('RANDOM()').limit(2).each do |product|
+    invoice.invoice_items.create!(
+      product: product,
+      quantity: rand(1..3),
+      unit_price: product.price,
+      status: :pending
     )
-  end
-end
 
-# Create Invoices linked to Customers
-20.times do
-  Invoice.create!(
-    customer: Customer.all.sample,
-    status: Invoice.statuses.keys.sample # Random status
-  )
-end
-
-# Iterate through invoices and create transactions
-Invoice.all.find_each do |invoice|
-  rand(1..3).times do
-    InvoiceItem.create!(
-      invoice: invoice,
-      product: Product.all.sample,
-      quantity: rand(1..10),
-      unit_price: Faker::Commerce.price(range: 10.0..500.0).round(2)
-    )
-  end
-
-  # Create a single transaction for each invoice
-  Transaction.create!(
-    invoice: invoice,
-    credit_card_number: Faker::Finance.credit_card(:visa).gsub(/[^0-9]/, ''), # Ensure only digits
-    credit_card_expiration_date: Faker::Date.forward(days: rand(30..365)).strftime('%m/%y'), # Random future expiration date
-    status: %i[successful failed].sample
-  )
-end
-
-# Create Reviews linked to Products and Customers
-Product.all.find_each do |product|
-  rand(2..5).times do
     product.reviews.create!(
-      rating: rand(1..5),
-      text: Faker::Lorem.paragraph,
-      customer: Customer.all.sample
+      customer: customer,
+      rating: rand(3..5),
+      text: Faker::Lorem.sentence
     )
   end
+
+  invoice.transactions.create!(
+    credit_card_number: Faker::Number.number(digits: 16),
+    credit_card_expiration_date: '12/26',
+    status: :successful
+  )
 end
+
+Rails.logger.debug '✅ Done seeding!'
 
 Rails.logger.debug 'Seeding completed!'
 Rails.logger.debug "#{Admin.count} admins created."
@@ -108,4 +116,5 @@ puts "#{Invoice.count} invoices created."
 puts "#{InvoiceItem.count} invoice items created."
 puts "#{Transaction.count} transactions created."
 puts "#{Review.count} reviews created."
+puts "#{Discount.count} discounts created."
 # rubocop:enable Rails/Output

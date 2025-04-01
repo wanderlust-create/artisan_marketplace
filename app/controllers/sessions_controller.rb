@@ -39,16 +39,18 @@ class SessionsController < ApplicationController
     Admin.find_by(email: email) || Artisan.find_by(email: email)
   end
 
-  def log_in_user(user)
+  def log_in_user(user) # rubocop:disable Metrics/AbcSize
     session[:user_email] = user.email
 
-    session[:role] = if user.is_a?(Admin)
-                       user.super_admin? ? 'super_admin' : 'admin' # Differentiate between admin and super_admin
-                     elsif user.is_a?(Artisan)
-                       'artisan'
-                     else
-                       'guest' # Optional fallback for unexpected cases
-                     end
+    if user.is_a?(Admin)
+      session[:admin_id] = user.id
+      session[:role] = user.super_admin? ? 'super_admin' : 'admin'
+    elsif user.is_a?(Artisan)
+      session[:artisan_id] = user.id
+      session[:role] = 'artisan'
+    else
+      session[:role] = 'guest'
+    end
   end
 
   def dashboard_path_for(user)

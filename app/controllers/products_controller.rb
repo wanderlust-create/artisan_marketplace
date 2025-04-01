@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product_and_authorize, only: %i[show edit update destroy]
+  before_action :set_product_and_authorize, only: %i[show new edit update destroy]
   before_action :set_artisan, only: %i[index show]
 
   def index

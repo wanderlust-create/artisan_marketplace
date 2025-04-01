@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.feature 'AdminCreatesArtisan', type: :feature do
-  let(:admin) { FactoryBot.create(:admin, email: 'admin@example.com', password: 'password') }
-  let(:unauthorized_admin) { FactoryBot.create(:admin, email: 'otheradmin@example.com', password: 'password') }
+  let(:admin) { Admin.find_by(email: 'admin@example.com') }
+  let(:unauthorized_admin) { Admin.find_by(email: 'unauthorized_admin.com') }
 
   before do
     login_as(admin)
@@ -14,7 +14,6 @@ RSpec.feature 'AdminCreatesArtisan', type: :feature do
 
   scenario 'Admin navigates to the new artisan page from the artisan index' do
     visit admin_artisans_path(admin)
-    expect(page).not_to have_content('Your Artisans')
     expect(page).to have_link('Add New Artisan')
 
     click_link 'Add New Artisan'

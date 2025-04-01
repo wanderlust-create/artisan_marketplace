@@ -1,9 +1,10 @@
 class ApplicationController < ActionController::Base
   def current_user
-    # Finds the current user by their email stored in the session.
-    # If new traits are added for Admin or Artisan models that affect login or session behavior,
-    # ensure the session and this method are updated accordingly.
-    @current_user ||= Admin.find_by(email: session[:user_email]) || Artisan.find_by(email: session[:user_email])
+    if session[:admin_id]
+      @current_user ||= Admin.find_by(id: session[:admin_id])
+    elsif session[:artisan_id]
+      @current_user ||= Artisan.find_by(id: session[:artisan_id])
+    end
   end
 
   def dashboard_path_for(user)
@@ -18,5 +19,5 @@ class ApplicationController < ActionController::Base
     root_path # Fallback for unexpected cases
   end
 
-  helper_method :current_user, :dashboard_path_for # Makes this method available in views
+  helper_method :current_user, :dashboard_path_for
 end
