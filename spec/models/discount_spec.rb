@@ -4,7 +4,7 @@ RSpec.describe Discount, type: :model do
   let(:artisan) { create(:artisan) }
   let(:product) { create(:product, artisan: artisan, price: 100.0) }
 
-  context 'validations' do # rubocop:disable RSpec/ContextWording
+  describe 'validations' do
     it 'is valid with valid attributes for price discount' do
       discount = build(:discount, product: product, original_price: 100.0, discount_price: 80.0, discount_type: :price, start_date: Time.zone.today, end_date: Time.zone.today + 5)
       expect(discount).to be_valid
@@ -29,7 +29,7 @@ RSpec.describe Discount, type: :model do
     end
 
     it 'is invalid if end_date is before start_date' do
-      discount = build(:discount, product: product, start_date: Date.today, end_date: Date.yesterday)
+      discount = build(:discount, product: product, start_date: Time.zone.today, end_date: Date.yesterday)
       discount.valid?
       expect(discount.errors[:end_date]).to include('must be after the start date')
     end
