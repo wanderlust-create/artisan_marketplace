@@ -59,14 +59,14 @@ jobs:
 
       - name: 📤 Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage
 
       - name: 📈 Upload SimpleCov badge
         if: always()
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-badge
           path: coverage/badge.svg
