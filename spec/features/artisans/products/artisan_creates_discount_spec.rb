@@ -3,17 +3,16 @@ require 'rails_helper'
 RSpec.describe 'ArtisanCreatesDiscount', :js, type: :feature do
   let(:admin) { create(:admin) }
   let(:artisan) { create(:artisan, admin: admin) }
-  let(:product) { create(:product, artisan: artisan) }
+  let(:product) { create(:product, artisan: artisan, price: 50.00) }
 
   before do
     login_as(artisan)
   end
 
   scenario 'Artisan creates a discount with a specific discount price' do
-    # visit new_artisan_product_discount_path(artisan_id: artisan.id, product_id: product.id)
     visit new_artisan_product_discount_path(artisan, product)
     expect(page).to have_content("Current Price: $#{product.price}")
-    expect(page).to have_content('Create Discount')
+    expect(page).to have_content("Create a Discount for #{product.name}")
     expect(page).to have_content('Discount Type')
 
     select 'Discount Price', from: 'Discount Type'
@@ -82,18 +81,22 @@ RSpec.describe 'ArtisanCreatesDiscount', :js, type: :feature do
     click_button 'Create Discount'
 
     expect(page).to have_current_path(new_artisan_product_discount_path(artisan, product))
-    expect(page).to have_content('Value must be less than or equal to 100')
+    expect(page).to have_content('Discount price must be greater than 0')
   end
 
-  scenario 'Product page displays multiple discounts' do
+  scenario 'Product page displays multiple discounts' do # rubocop:disable RSpec/ExampleLength
     product.discounts.create!(
       discount_price: 45.0,
+      original_price: product.price,
+      discount_type: 'price',
       start_date: Time.zone.today + 1,
       end_date: Time.zone.today + 8
     )
 
     product.discounts.create!(
       discount_price: 37.0,
+      original_price: product.price,
+      discount_type: 'price',
       start_date: Time.zone.today + 10,
       end_date: Time.zone.today + 17
     )
