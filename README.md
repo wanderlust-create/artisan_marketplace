@@ -1,8 +1,11 @@
+
 # Artisan Marketplace
 
-This project serves as a marketplace for artisans and administrators to manage users and products. The platform includes role-based permissions, enabling super admins to manage regular admins and other entities. Built with Ruby on Rails.
+This project serves as a marketplace for artisans and administrators to manage users and products. The platform includes role-based permissions, artisan discount management, and a public JSON API. Built with Ruby on Rails.
 
 > **Note**: This is Tamara's first project built with the assistance of AI tools, showcasing her growth as a developer and collaboration with AI.
+
+---
 
 ## 📝 Table of Contents
 
@@ -10,108 +13,129 @@ This project serves as a marketplace for artisans and administrators to manage u
 - [Setup](#setup)
 - [Folder Structure](#folder-structure)
 - [Schema](#schema)
+- [Stretch Goals](#stretch-goals)
 - [Contributors](#contributors)
 
 ---
 
-## ✨ Features <a name="features"></a>
+## ✨ Features
 
 ### Admin Features:
 - **Super Admins**:
   - Create, edit, and delete admin accounts.
-  - Manage role-based permissions for regular admins.
+  - Assign or change roles for regular admins.
 - **Regular Admins**:
   - Manage artisan accounts.
-  - Create and manage products associated with artisans.
+  - View and manage products tied to artisans.
 
 ### Artisan Features:
-- Create and manage product listings.
+- Create, edit, and delete products.
+- Create discounts on products using either a **fixed discount price** or a **percentage reduction**.
+- Discounts are validated to ensure:
+  - Only one input (price or percentage) is required.
+  - The discount does not exceed the original product price.
+  - Discount periods do not overlap.
 
 ### General Features:
-- Authentication for admins and artisans.
-- Role-based access control.
-- Responsive UI for easy navigation.
+- Authentication and role-based access.
+- Responsive admin and artisan dashboards.
+- Clean MVC architecture with pagination and caching.
 
 ---
 
-## 💻 Setup <a name="setup"></a>
+## 🧠 New Features
+
+### ✅ Discount Analytics Scope
+```ruby
+Product.with_active_discounts
+```
+Returns all products with currently active discounts (based on today's date). Useful for:
+- Admin dashboards
+- Seasonal campaigns
+- Surfacing trending sales
+
+### ✅ Public Discounts JSON API
+
+**Endpoint:**  
+`GET /api/v1/products/:product_id/discounts`
+
+**Returns:** JSON array of discounts sorted by start date.
+
+**Example Response:**
+```json
+[
+  {
+    "id": 1,
+    "original_price": "50.00",
+    "discount_price": "45.00",
+    "percentage_off": null,
+    "start_date": "2025-04-01",
+    "end_date": "2025-04-10",
+    "discount_type": "price"
+  }
+]
+```
+
+---
+
+## 💻 Setup
 
 ### Requirements:
-- [Ruby 3.1.0](https://www.ruby-lang.org/)
-- [Rails 7.0](https://rubyonrails.org/)
-- [PostgreSQL](https://www.postgresql.org/)
+- Ruby `3.3.6`
+- Rails `~> 7.0.8`
+- SQLite (dev/test) or PostgreSQL (for production)
 
-### Installation:
-1. Clone the repository:  
-   ```bash
-   git@github.com:wanderlust-create/artisan-marketplace.git
-   ```
-2. Navigate to the project directory:  
-   ```bash
-   cd artisan-marketplace
-   ```
-3. Install gems:  
-   ```bash
-   bundle install
-   ```
-4. Set up the database:  
-   ```bash
-   rails db:create db:migrate db:seed
-   ```
-5. Start the Rails server:  
-   ```bash
-   rails server
-   ```
-6. Access the application in your browser:  
-   `http://localhost:3000`
+### Instructions:
+```bash
+git clone git@github.com:wanderlust-create/artisan-marketplace.git
+cd artisan-marketplace
+bundle install
+rails db:create db:migrate db:seed
+rails server
+```
+
+Access locally at:  
+`http://localhost:3000`
 
 ---
 
-## 📂 Folder Structure <a name="folder-structure"></a>
+## 📂 Folder Structure
 
-- `app/controllers`: Handles HTTP requests for admins, artisans, and sessions.
-- `app/models`: Contains models for `Admin`, `Artisan`, and other database entities.
-- `app/views`: Renders HTML for user and admin interfaces.
-- `config/routes.rb`: Defines application routes, including role-based access paths.
-- `db/migrate`: Database schema and migration files.
-
----
-
-## 🗟 Schema <a name="schema"></a>
-
-### Visual Representation:
-
-![Database Schema](https://github.com/wanderlust-create/artisan_marketplace/blob/main/app/assets/images/artisan_marketplace_schema.png?raw=true)
-
-### Detailed Schema:
-
-- **Admins**:
-  - Attributes: `id`, `email`, `password_digest`, `role` (enum: 0 = regular, 1 = super_admin), `created_at`, `updated_at`.
-
-- **Artisans**:
-  - Attributes: `id`, `store_name`, `email`, `password_digest`, `admin_id` (FK to Admins), `status` (enum: 0 = active, 1 = inactive), `created_at`, `updated_at`.
-
-- **Customers**:
-  - Attributes: `id`, `first_name`, `last_name`, `email`, `created_at`, `updated_at`.
-
-- **Products**:
-  - Attributes: `id`, `name`, `description`, `price`, `stock`, `artisan_id` (FK to Artisans), `visibility` (boolean, default: true), `created_at`, `updated_at`.
-
-- **Invoices**:
-  - Attributes: `id`, `customer_id` (FK to Customers), `status` (enum: 0 = pending, 1 = completed, 2 = cancelled), `created_at`, `updated_at`.
-
-- **InvoiceItems**:
-  - Attributes: `id`, `invoice_id` (FK to Invoices), `product_id` (FK to Products), `quantity`, `unit_price`, `status` (enum: 0 = pending, 1 = shipped, 2 = cancelled), `created_at`, `updated_at`.
-
-- **Reviews**:
-  - Attributes: `id`, `rating`, `text`, `product_id` (FK to Products), `customer_id` (FK to Customers), `created_at`, `updated_at`.
-
-- **Transactions**:
-  - Attributes: `id`, `invoice_id` (FK to Invoices), `credit_card_number`, `credit_card_expiration_date`, `status` (enum: 0 = approved, 1 = declined, 2 = refunded), `created_at`, `updated_at`.
+- `app/controllers` – Admin, Artisan, API, and Auth logic.
+- `app/models` – Business logic for Users, Products, Discounts, etc.
+- `app/serializers` – JSON serialization for API responses.
+- `config/routes.rb` – Nested resourceful routing, namespaced APIs.
+- `spec/` – RSpec test suite with model, feature, and request specs.
 
 ---
 
-## Contributors <a name="contributors"></a>
+## 🗟 Schema
 
-- 👩🏽‍🎤 Tamara Dowis | [GitHub](https://github.com/wanderlust-create) | [LinkedIn](https://www.linkedin.com/in/tamara-dowis/)
-- 🤖 ChatGPT AI (Assistant)
+View:  
+![Schema Image](https://github.com/wanderlust-create/artisan_marketplace/blob/main/app/assets/images/artisan_marketplace_schema.png?raw=true)
+
+Entities:
+- **Admins** – role-based authorization (`regular`, `super_admin`)
+- **Artisans** – store owners tied to an admin
+- **Products** – owned by artisans, include stock & visibility
+- **Discounts** – attached to products, supports fixed or % reductions
+- **Customers** – future-ready for order and review features
+- **Invoices**, **InvoiceItems**, **Transactions** – schema defined for future sales system
+- **Reviews** – allow customers to rate products (planned)
+
+---
+
+## 🎯 Stretch Goals (In Progress or Future Work)
+
+- [ ] Customer order flow (invoices, invoice items, transactions)
+- [ ] Product reviews and average rating
+- [ ] Admin dashboard analytics (top artisans, popular discounts)
+- [ ] OAuth or 2FA authentication
+- [ ] Background jobs for auto-expiring discounts
+
+---
+
+## 👩🏽‍💻 Contributors
+
+- Tamara Dowis | [GitHub](https://github.com/wanderlust-create) | [LinkedIn](https://www.linkedin.com/in/tamara-dowis/)
+- 🤖 ChatGPT AI (dev pair + code assistant)
