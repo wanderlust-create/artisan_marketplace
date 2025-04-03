@@ -18,7 +18,12 @@ class Discount < ApplicationRecord
 
   # Scopes
   scope :by_artisan, ->(artisan_id) { joins(product: :artisan).where(products: { artisan_id: artisan_id }) }
+
   scope :current_and_upcoming_discounts, -> { where('end_date >= ?', Time.zone.today).order(:start_date) }
+
+  scope :active_today, lambda {
+    where('start_date <= ? AND end_date >= ?', Time.zone.today, Time.zone.today)
+  }
 
   private
 
