@@ -34,10 +34,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v3
 
       - name: 💎 Set up Ruby
-        uses: ruby/setup-ruby@v1.164.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3.6"
 
@@ -76,10 +76,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v3
 
       - name: 💎 Set up Ruby
-        uses: ruby/setup-ruby@v1.164.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3.6"
 
