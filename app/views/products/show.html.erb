@@ -20,6 +20,46 @@
     </p>
     <% end %>
 </div>
+<!-- Render all product discounts -->
+<% if @product.discounts.any? %>
+  <h3>Active & Upcoming Discounts</h3>
+  <table id="discounts">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Discount</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @product.discounts.each do |discount| %>
+        <tr id="discount-<%= discount.id %>">
+          <td>
+            <%= discount.discount_type.capitalize %>
+          </td>
+          <td>
+            <% if discount.percentage_off.present? %>
+              <%= number_to_percentage(discount.percentage_off, precision: 0) %> off<br>
+                <small>(Now <%= number_to_currency(discount.discount_price) %>)</small>
+                <% else %>
+                  <%= number_to_currency(discount.discount_price) %>
+                    <% end %>
+          </td>
+          <td>
+            <%= discount.start_date.strftime('%B %d, %Y') %>
+          </td>
+          <td>
+            <%= discount.end_date.strftime('%B %d, %Y') %>
+          </td>
+        </tr>
+        <% end %>
+    </tbody>
+  </table>
+  <% else %>
+    <p><em>No discounts available at the moment.</em></p>
+    <% end %>
+
 
 <!-- Links for Artisan -->
 <% if current_user==@product.artisan %>

@@ -3,6 +3,7 @@ class Product < ApplicationRecord
   has_many :invoice_items, dependent: :destroy
   has_many :invoices, through: :invoice_items
   has_many :reviews, dependent: :destroy
+  has_many :discounts, dependent: :destroy
 
   validates :name, :price, :stock, presence: true
   validates :price, numericality: { greater_than_or_equal_to: 0 }

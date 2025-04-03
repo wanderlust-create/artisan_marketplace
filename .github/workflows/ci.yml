@@ -3,10 +3,13 @@ name: Ruby CI
 on:
   push:
     branches:
-      - "*" # Runs on all branches
+      - main
+      - dev
+      - feature/**
   pull_request:
     branches:
-      - "*" # Runs on all pull requests
+      - main
+      - dev
 
 jobs:
   test:
@@ -14,7 +17,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:14 # Stable version of Postgres
+        image: postgres:14
         ports:
           - 5432:5432
         env:
@@ -26,41 +29,64 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+    env:
+      RAILS_ENV: test
+
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Ruby
+      - name: 💎 Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3.6" # Update this to match your Ruby version
+          ruby-version: "3.3.6"
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
           gem install bundler
           bundle install
 
-      - name: Set up database
-        env:
-          RAILS_ENV: test
+      - name: 🛠️ Set up database
         run: |
           cp config/database.yml.ci config/database.yml || echo 'No custom database.yml.ci provided'
           bin/rails db:create
           bin/rails db:migrate
 
-      - name: Run tests
-        env:
-          RAILS_ENV: test
+      - name: ✅ Run tests
         run: |
           bundle exec rspec || echo "Tests completed with errors, ignoring for now"
-          echo "Coverage report: $(grep 'Coverage is at' coverage/.last_run)"
+          echo "Coverage report: $(grep 'Coverage is at' coverage/.last_run || echo 'No coverage found')"
 
-      - name: Upload coverage report
-        if: success() 
-        uses: actions/upload-artifact@v3
+      - name: 📤 Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage
 
-      - name: Run RuboCop
+      - name: 📈 Upload SimpleCov badge
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-badge
+          path: coverage/badge.svg
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 💎 Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.6"
+
+      - name: 📦 Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: 🧹 Run RuboCop
         run: bundle exec rubocop
