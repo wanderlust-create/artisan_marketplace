@@ -16,16 +16,38 @@ RSpec.describe Product, type: :model do
     it { is_expected.to validate_numericality_of(:stock).only_integer.is_greater_than_or_equal_to(0) }
   end
 
-  describe 'data creation with Faker' do
-    let(:artisan) { create(:artisan) }
-    let(:product) { create(:product, artisan: artisan, name: Faker::Commerce.product_name, price: 50.00, stock: 10) }
+  describe '.with_active_discounts' do
+    subject(:products) { described_class.with_active_discounts }
 
-    it 'creates a valid product with Faker data' do
-      expect(product).to be_valid
-      expect(product.name).to be_present
-      expect(product.price).to eq(50.00)
-      expect(product.stock).to eq(10)
-      expect(product.artisan).to eq(artisan)
+    let(:artisan) { create(:artisan) }
+    let(:product_with_discount) { create(:product, artisan:) }
+    let(:product_without_discount) { create(:product, artisan:) }
+
+    before do
+      create(:discount, product: product_with_discount,
+                        start_date: Time.zone.today - 1,
+                        end_date: Time.zone.today + 1)
+
+      create(:discount, product: product_without_discount,
+                        start_date: 2.weeks.ago,
+                        end_date: 1.week.ago)
+    end
+
+    it 'includes products with active discounts' do
+      expect(products).to include(product_with_discount)
+    end
+
+    it 'excludes products without active discounts' do
+      expect(products).not_to include(product_without_discount)
+    end
+
+    it 'excludes products with discounts that start in the future' do
+      future_product = create(:product, artisan:)
+      create(:discount, product: future_product,
+                        start_date: 1.day.from_now,
+                        end_date: 1.week.from_now)
+
+      expect(products).not_to include(future_product)
     end
   end
 end
