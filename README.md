@@ -5,11 +5,20 @@
 
 # Artisan Marketplace
 
-This project serves as a marketplace for artisans and administrators to manage users and products. The platform includes role-based permissions, artisan discount management, and a public JSON API. Built with Ruby on Rails.
+Artisan Marketplace is a backend Rails application built to manage artisan-made products, users, and discounts. The platform features role-based permissions for admins and artisans, discount logic, a JSON API with authentication for protected endpoints, and test coverage in progress (~59%).
 
-> **Note**: This is Tamara's first project built with the assistance of AI tools, showcasing her growth as a developer and collaboration with AI.
-
----
+> **Note**: Note: This is Tamara's first project built with the support of AI tools, highlighting her growth and adaptability as a developer.
+>
+> 
+<p align="center">
+  <img src="https://img.shields.io/badge/Ruby-CC342D?style=flat-square&logo=ruby&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Rails-5C0303?style=flat-square&logo=rubyonrails&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Tested_with-RSpec-701516?style=flat-square&logo=rubyonrails&logoColor=white"/>
+  <img src="https://img.shields.io/badge/coverage-59%25-yellow?style=flat-square"/>
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square"/>
+  <img src="https://img.shields.io/badge/Made_with-%E2%98%95-blue?style=flat-square"/>
+  <img src="https://img.shields.io/badge/Made_with-%F0%9F%92%96-purple?style=flat-square"/>
+</p>
 
 ## 📝 Table of Contents
 
