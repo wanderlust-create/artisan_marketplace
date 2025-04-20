@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/artisan-marketplace-banner.png" alt="SArtisan Marketplace Banner" width=800"/>
+</p>
+<p align="center"><em>A role-based marketplace where artisans and admins can manage handmade products and discounts.</em></p>
 
 # Artisan Marketplace
 
